@@ -1,156 +1,54 @@
-﻿CREATE DATABASE CSDLNC
-go
-
--- Tạo bảng Muc
-CREATE TABLE Muc (
-    IDMuc VARCHAR(5) PRIMARY KEY,
-    TenMuc NVARCHAR(50) NOT NULL
-);
-
--- Tạo bảng MonAn
-CREATE TABLE MonAn (
-    MaMon VARCHAR(5) PRIMARY KEY,
-    TenMon NVARCHAR(50) NOT NULL,
-    GiaHienTai DECIMAL(10, 2) NOT NULL,
-    CoTheGiaoHang BIT NOT NULL,
-    IDMuc VARCHAR(5) NOT NULL,
-    FOREIGN KEY (IDMuc) REFERENCES Muc(IDMuc)  
-);
-
--- Tạo bảng PhieuDatMon
-CREATE TABLE PhieuDatMon (
-    MaPhieu VARCHAR(5) PRIMARY KEY,
-    NgayLap DATE NOT NULL,
-    SoBan INT NOT NULL,
-    IDNhanVien VARCHAR(5) NOT NULL,
-    MaChiNhanh VARCHAR(5) NOT NULL,
-);
-
--- Tạo bảng PhieuTrucTuyen
-CREATE TABLE PhieuTrucTuyen (
-    MaPhieu VARCHAR(5) PRIMARY KEY,
-    SoKhach INT CHECK (SoKhach > 1),
-    NgayDat DATE NOT NULL,
-    GioDen TIME NOT NULL,
-    GhiChu NVARCHAR(100),
-    SDT VARCHAR(10) NOT NULL,
-    FOREIGN KEY (MaPhieu) REFERENCES PhieuDatMon(MaPhieu)
-);
-
--- Tạo bảng DanhGia
-CREATE TABLE DanhGia (
-    MaDanhGia VARCHAR(5) PRIMARY KEY,
-    DiemPhucVu INT CHECK (DiemPhucVu BETWEEN 0 AND 10) NOT NULL,
-    DiemViTri INT CHECK (DiemViTri BETWEEN 0 AND 10) NOT NULL,
-    ChatLuongMon INT CHECK (ChatLuongMon BETWEEN 0 AND 10) NOT NULL,
-    GiaCa INT CHECK (GiaCa BETWEEN 0 AND 10) NOT NULL,
-    KhongGian INT CHECK (KhongGian BETWEEN 0 AND 10) NOT NULL,
-    BinhLuan NVARCHAR(100),
-    MaPhieu VARCHAR(5) NOT NULL,
-    FOREIGN KEY (MaPhieu) REFERENCES PhieuDatMon(MaPhieu)
-);
-
--- Tạo bảng HoaDon
-CREATE TABLE HoaDon (
-    MaHoaDon VARCHAR(5) PRIMARY KEY,
-    NgayGioXuat DATETIME NOT NULL,
-    TongTien DECIMAL(10, 2) NOT NULL,  
-    Giam DECIMAL(10, 2),               
-    MaPhieuDat VARCHAR(5),
-    MaTheKhachHang VARCHAR(5),
-    FOREIGN KEY (MaPhieuDat) REFERENCES PhieuDatMon(MaPhieu)
-);
-  --FOREIGN KEY (MaTheKhachHang) REFERENCES TheKhachHang(MaThe)
-
--- Tạo bảng ChiTietThucDon
-CREATE TABLE ChiTietThucDon (
-    MaChiNhanh VARCHAR(5),
-    MaMonAn VARCHAR(5),
-    MaKhuVuc VARCHAR(5),
-    TinhTrang NVARCHAR(10) CHECK (TinhTrang IN ('Có', 'Không')) NOT NULL,
-    PRIMARY KEY (MaChiNhanh, MaMonAn, MaKhuVuc),
-    FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMon),
-);
---FOREIGN KEY (MaChiNhanh) REFERENCES ChiNhanh(MaChiNhanh),
---FOREIGN KEY (MaKhuVuc) REFERENCES KhuVuc(MaKhuVuc)
-
--- Tạo bảng ChiTietPhieuDat
-CREATE TABLE ChiTietPhieuDat (
-    MaMon VARCHAR(5),
-    MaPhieu VARCHAR(5),
-    SoLuong INT CHECK (SoLuong > 0) NOT NULL,
-    DonGia DECIMAL(10, 2) NOT NULL,  
-    PRIMARY KEY (MaMon, MaPhieu),
-    FOREIGN KEY (MaMon) REFERENCES MonAn(MaMon),
-    FOREIGN KEY (MaPhieu) REFERENCES PhieuDatMon(MaPhieu)
-);
-
--- Tạo bảng KhuVuc
-CREATE TABLE KhuVuc (
-    MaKhuVuc VARCHAR(5) PRIMARY KEY,
-    TenThanhPho NVARCHAR(50) NOT NULL
-);
-
--- Tạo bảng BoPhan
-CREATE TABLE BoPhan (
-    MaBoPhan VARCHAR(5) PRIMARY KEY,
-    TenBoPhan NVARCHAR(50) NOT NULL
-);
+﻿USE MASTER
+--DROP DATABASE RES_ADB
+GO 
+CREATE DATABASE RES_ADB
+GO
+USE RES_ADB
+GO
 
 -- Tạo bảng KhachHang
 CREATE TABLE KhachHang (
-    IDKhachHang VARCHAR(5) PRIMARY KEY,
-    Username VARCHAR(50),
-	Password VARCHAR(50)
-);
-
--- Tạo bảng ChiNhanh
-CREATE TABLE ChiNhanh (
-    MaChiNhanh VARCHAR(5) PRIMARY KEY,
-    TenChiNhanh NVARCHAR(50) NOT NULL,
-    DiaChi NVARCHAR(50) NOT NULL,
-    ThoiGianMo TIME NOT NULL,
-    ThoiGianDong TIME NOT NULL,
-    SDT VARCHAR(10) NOT NULL,
-    Website VARCHAR(50) NOT NULL,
-    BaiXeMay BIT NOT NULL,
-    BaiXeHoi BIT NOT NULL,
-    MaKhuVuc VARCHAR(5) NOT NULL,
-    MaNVQL VARCHAR(5) NOT NULL,
-    FOREIGN KEY (MaKhuVuc) REFERENCES KhuVuc(MaKhuVuc),
-);
---FOREIGN KEY (MaNVQL) REFERENCES NhanVien(IDNhanVien)
-
--- Tạo bảng BoPhan_ChiNhanh
-CREATE TABLE BoPhan_ChiNhanh (
-    MaBoPhan VARCHAR(5),
-    MaChiNhanh VARCHAR(5),
-    PRIMARY KEY (MaBoPhan, MaChiNhanh),  
-    FOREIGN KEY (MaBoPhan) REFERENCES BoPhan(MaBoPhan),
-    FOREIGN KEY (MaChiNhanh) REFERENCES ChiNhanh(MaChiNhanh)
+    IDKhachHang VARCHAR(10) PRIMARY KEY,
+    Username VARCHAR(50) UNIQUE,
+	Password varchar(50)
 );
 
 -- Tạo bảng NhanVien
 CREATE TABLE NhanVien (
-    IDNhanVien VARCHAR(5) PRIMARY KEY,
+    IDNhanVien VARCHAR(10) PRIMARY KEY,
     HoTen NVARCHAR(50) NOT NULL,
     NgaySinh DATE,
-    GioiTinh NVARCHAR(3) CHECK (GioiTinh IN (N'Nam', N'Nữ')),
+    GioiTinh NVARCHAR(3) CHECK (GioiTinh IN ('Nam', 'Nữ')),
     DiaChi NVARCHAR(50) NOT NULL,
     Luong DECIMAL(10, 2) CHECK (Luong > 0) NOT NULL,
     NgayVaoLam DATE NOT NULL,
     NgayNghiViec DATE,
-    MaBoPhan VARCHAR(5),
-    MaChiNhanh VARCHAR(5),
-    Username VARCHAR(50),
-    Password VARCHAR(50),
-    FOREIGN KEY (MaBoPhan) REFERENCES BoPhan(MaBoPhan),  
-    FOREIGN KEY (MaChiNhanh) REFERENCES ChiNhanh(MaChiNhanh), 
+    MaBoPhan VARCHAR(10) NOT NULL,
+    MaChiNhanh VARCHAR(10) NOT NULL,
+    Username VARCHAR(50) UNIQUE,
+	Password varchar(50)
+);
+
+-- Tạo bảng LichSuTruyCap
+CREATE TABLE LichSuTruyCap (
+    IDKhachHang VARCHAR(10),
+    ThoiGianBatDau DATE,
+    ThoiGianKetThuc DATE NOT NULL,
+	PRIMARY KEY (IDKhachHang, ThoiGianBatDau)
+);
+
+-- Tạo bảng LichSuLamViec
+CREATE TABLE LichSuLamViec (
+    IDNhanVien VARCHAR(10),
+    NgayBatDau DATE,
+    NgayKetThuc DATE,
+    MaChiNhanh VARCHAR(10) NOT NULL,
+    PRIMARY KEY (IDNhanVien, NgayBatDau)
 );
 
 -- Tạo bảng TheKhachHang
 CREATE TABLE TheKhachHang (
-    MaThe VARCHAR(5) PRIMARY KEY,
+    MaThe VARCHAR(10) PRIMARY KEY,
     HoTen NVARCHAR(50) NOT NULL,
     CCCD VARCHAR(12) NOT NULL,
     Email VARCHAR(50),
@@ -160,42 +58,151 @@ CREATE TABLE TheKhachHang (
     TongGiaTri INT CHECK (TongGiaTri > 0) NOT NULL,
     NgayLap DATE NOT NULL,
     TinhTrang VARCHAR(10) CHECK (TinhTrang IN ('Đang hoạt động', 'Đã hủy')),
-    IDKhachHang VARCHAR(5),
-    NhanVienLap VARCHAR(5) NOT NULL,
-    FOREIGN KEY (IDKhachHang) REFERENCES KhachHang(IDKhachHang),
-    FOREIGN KEY (NhanVienLap) REFERENCES NhanVien(IDNhanVien)
+    IDKhachHang VARCHAR(10),
+    NhanVienLap VARCHAR(10) NOT NULL
 );
 
--- Tạo bảng LichSuTruyCap
-CREATE TABLE LichSuTruyCap (
-    IDKhachHang VARCHAR(5),
-    ThoiGianBatDau DATE,
-    ThoiGianKetThuc DATE NOT NULL,
-    PRIMARY KEY (IDKhachHang, ThoiGianBatDau),
-    FOREIGN KEY (IDKhachHang) REFERENCES KhachHang(IDKhachHang)
+-- Tạo bảng PhieuDatMon
+CREATE TABLE PhieuDatMon (
+    MaPhieu VARCHAR(10) PRIMARY KEY,
+    NgayLap DATE NOT NULL,
+    SoBan INT NOT NULL,
+    IDNhanVien VARCHAR(10) NOT NULL,
+    MaChiNhanh VARCHAR(10) NOT NULL
 );
 
--- Tạo bảng LichSuLamViec
-CREATE TABLE LichSuLamViec (
-    IDNhanVien VARCHAR(5),
-    NgayBatDau DATE,
-    NgayKetThuc DATE,
-    MaChiNhanh VARCHAR(5) NOT NULL,
-    PRIMARY KEY (IDNhanVien, NgayBatDau),
-    FOREIGN KEY (IDNhanVien) REFERENCES NhanVien(IDNhanVien),
-    FOREIGN KEY (MaChiNhanh) REFERENCES ChiNhanh(MaChiNhanh)
+-- Tạo bảng PhieuTrucTuyen
+CREATE TABLE PhieuTrucTuyen (
+    MaPhieu VARCHAR(10) PRIMARY KEY,
+    SoKhach INT CHECK (SoKhach > 1),
+    NgayDat DATE NOT NULL,
+    GioDen TIME NOT NULL,
+    GhiChu NVARCHAR(100),
+    SDT VARCHAR(10) NOT NULL
 );
 
--- Tao rang buoc khoa ngoai
+-- Tạo bảng DanhGia
+CREATE TABLE DanhGia (
+    MaDanhGia VARCHAR(10) PRIMARY KEY,
+    DiemPhucVu INT CHECK (DiemPhucVu BETWEEN 1 AND 10) NOT NULL,
+    DiemViTri INT CHECK (DiemViTri BETWEEN 1 AND 10) NOT NULL,
+    ChatLuongMon INT CHECK (ChatLuongMon BETWEEN 1 AND 10) NOT NULL,
+    GiaCa INT CHECK (GiaCa BETWEEN 1 AND 10) NOT NULL,
+    KhongGian INT CHECK (KhongGian BETWEEN 1 AND 10) NOT NULL,
+    BinhLuan NVARCHAR(100),
+    MaPhieu VARCHAR(10) NOT NULL
+);
 
--- bang HoaDon
-ALTER TABLE HoaDon ADD CONSTRAINT FK_HoaDon_TheKhachHang FOREIGN KEY (MaTheKhachHang) REFERENCES TheKhachHang(MaThe)
+-- Tạo bảng HoaDon
+CREATE TABLE HoaDon (
+    MaHoaDon VARCHAR(10) PRIMARY KEY,
+    NgayGioXuat DATETIME NOT NULL,
+    TongTien DECIMAL(10, 2) NOT NULL,
+    Giam DECIMAL(10, 2),
+    MaPhieuDat VARCHAR(10),
+    MaTheKhachHang VARCHAR(10)
+);
 
--- bang ChiTietHoaDon
---ALTER TABLE ChiTietThucDon
---DROP CONSTRAINT FK_ChiTietThucDon_ChiNhanh
-ALTER TABLE ChiTietThucDon ADD CONSTRAINT FK_ChiTietThucDon_ChiNhanh FOREIGN KEY (MaChiNhanh) REFERENCES  ChiNhanh(MaChiNhanh)
-ALTER TABLE ChiTietThucDon ADD CONSTRAINT FK_ChiTietThucDon_NhanVien FOREIGN KEY (MaKhuVuc) REFERENCES KhuVuc(MaKhuVuc)
+-- Tạo bảng ChiNhanh
+CREATE TABLE ChiNhanh (
+    MaChiNhanh VARCHAR(10) PRIMARY KEY,
+    TenChiNhanh NVARCHAR(50) NOT NULL,
+    DiaChi NVARCHAR(50) NOT NULL,
+    ThoiGianMo TIME NOT NULL,
+    ThoiGianDong TIME NOT NULL,
+    SDT VARCHAR(10) NOT NULL,
+    Website VARCHAR(50) NOT NULL,
+    BaiXeMay BIT NOT NULL,
+    BaiXeHoi BIT NOT NULL,
+    MaKhuVuc VARCHAR(10) NOT NULL,
+    MaNVQL VARCHAR(10),
+	CONSTRAINT CK_ThoiGianDong_ThoiGianMo
+    CHECK (ThoiGianDong > ThoiGianMo)
+);
 
--- bang ChiNhanh
-ALTER TABLE ChiNhanh ADD CONSTRAINT FK_ChiNhanh_NhanVien FOREIGN KEY (MaNVQL) REFERENCES NhanVien(IDNhanVien)
+-- Tạo bảng KhuVuc
+CREATE TABLE KhuVuc (
+    MaKhuVuc VARCHAR(10) PRIMARY KEY,
+    TenThanhPho NVARCHAR(50) NOT NULL
+);
+
+-- Tạo bảng BoPhan_ChiNhanh
+CREATE TABLE BoPhan_ChiNhanh (
+    MaBoPhan VARCHAR(10),
+    MaChiNhanh VARCHAR(10),
+	PRIMARY KEY (MaBoPhan, MaChiNhanh)
+);
+
+-- Tạo bảng BoPhan
+CREATE TABLE BoPhan (
+    MaBoPhan VARCHAR(10) PRIMARY KEY,
+    TenBoPhan NVARCHAR(50) NOT NULL
+);
+
+-- Tạo bảng ChiTietThucDon
+CREATE TABLE ChiTietThucDon (
+    MaChiNhanh VARCHAR(10),
+    MaMonAn VARCHAR(10),
+    MaKhuVuc VARCHAR(10),
+    TinhTrang NVARCHAR(10) CHECK (TinhTrang IN ('Có', 'Không')) NOT NULL,
+	PRIMARY KEY (MaChiNhanh, MaMonAn, MaKhuVuc)
+);
+
+-- Tạo bảng MonAn
+CREATE TABLE MonAn (
+    MaMon VARCHAR(10) PRIMARY KEY,
+    TenMon NVARCHAR(50) UNIQUE NOT NULL,
+    GiaHienTai DECIMAL(10, 2) NOT NULL,
+    CoTheGiaoHang BIT NOT NULL,
+    IDMuc VARCHAR(10) NOT NULL
+);
+
+-- Tạo bảng Muc
+CREATE TABLE Muc (
+    IDMuc VARCHAR(10) PRIMARY KEY,
+    TenMuc NVARCHAR(50) NOT NULL
+);
+
+-- Tạo bảng ChiTietPhieuDat
+CREATE TABLE ChiTietPhieuDat (
+    MaMon VARCHAR(10),
+    MaPhieu VARCHAR(10),
+    SoLuong INT CHECK (SoLuong > 0) NOT NULL,
+    DonGia DECIMAL(10, 2) CHECK (DonGia > 0) NOT NULL,
+    PRIMARY KEY (MaMon, MaPhieu)
+);
+
+ALTER TABLE NhanVien ADD CONSTRAINT PK_NV_BPCN FOREIGN KEY (MaBoPhan, MaChiNhanh) REFERENCES BoPhan_ChiNhanh(MaBoPhan, MaChiNhanh);
+
+ALTER TABLE LichSuTruyCap ADD CONSTRAINT PK_LS_KH FOREIGN KEY (IDKhachHang) REFERENCES KhachHang(IDKhachHang);
+
+ALTER TABLE LichSuLamViec ADD CONSTRAINT PK_LS_NV FOREIGN KEY (IDNhanVien) REFERENCES NhanVien(IDNhanVien);
+ALTER TABLE LichSuLamViec ADD CONSTRAINT PK_LS_CN FOREIGN KEY (MaChiNhanh) REFERENCES ChiNhanh(MaChiNhanh);
+
+ALTER TABLE TheKhachHang ADD CONSTRAINT PK_TKH_KH FOREIGN KEY (IDKhachHang) REFERENCES KhachHang(IDKhachHang);
+ALTER TABLE TheKhachHang ADD CONSTRAINT PK_TKH_NV FOREIGN KEY (NhanVienLap) REFERENCES NhanVien(IDNhanVien);
+
+ALTER TABLE PhieuDatMon ADD CONSTRAINT PK_PDM_NV FOREIGN KEY (IDNhanVien) REFERENCES NhanVien(IDNhanVien);
+ALTER TABLE PhieuDatMon ADD CONSTRAINT PK_PDM_CN FOREIGN KEY (MaChiNhanh) REFERENCES ChiNhanh(MaChiNhanh);
+
+ALTER TABLE PhieuTrucTuyen ADD CONSTRAINT PK_PTT_PDM FOREIGN KEY (MaPhieu) REFERENCES PhieuDatMon(MaPhieu);
+
+ALTER TABLE DanhGia ADD CONSTRAINT PK_DG_PDM FOREIGN KEY (MaPhieu) REFERENCES PhieuDatMon(MaPhieu);
+
+ALTER TABLE ChiNhanh ADD CONSTRAINT PK_CN_KV FOREIGN KEY (MaKhuVuc) REFERENCES KhuVuc(MaKhuVuc);
+ALTER TABLE ChiNhanh ADD CONSTRAINT PK_CN_NVQL FOREIGN KEY (MaNVQL) REFERENCES NhanVien(IDNhanVien);
+
+ALTER TABLE BoPhan_ChiNhanh ADD CONSTRAINT PK_BPCN_BP FOREIGN KEY (MaBoPhan) REFERENCES BoPhan(MaBoPhan);
+ALTER TABLE BoPhan_ChiNhanh ADD CONSTRAINT PK_BPCN_CN FOREIGN KEY (MaChiNhanh) REFERENCES ChiNhanh(MaChiNhanh);
+
+ALTER TABLE ChiTietThucDon ADD CONSTRAINT PK_CTTD_CN FOREIGN KEY (MaChiNhanh) REFERENCES ChiNhanh(MaChiNhanh);
+ALTER TABLE ChiTietThucDon ADD CONSTRAINT PK_CTTD_MA FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMon);
+ALTER TABLE ChiTietThucDon ADD CONSTRAINT PK_CTTD_KV FOREIGN KEY (MaKhuVuc) REFERENCES KhuVuc(MaKhuVuc);
+
+ALTER TABLE MonAn ADD CONSTRAINT PK_MA_M FOREIGN KEY (IDMuc) REFERENCES Muc(IDMuc);
+
+ALTER TABLE ChiTietPhieuDat ADD CONSTRAINT PK_CTPD_MA FOREIGN KEY (MaMon) REFERENCES MonAn(MaMon);
+ALTER TABLE ChiTietPhieuDat ADD CONSTRAINT PK_CTPD_PDM FOREIGN KEY (MaPhieu) REFERENCES PhieuDatMon(MaPhieu);
+
+ALTER TABLE HoaDon ADD CONSTRAINT PK_HD_TKH FOREIGN KEY (MaTheKhachHang) REFERENCES TheKhachHang(MaThe);
+ALTER TABLE HoaDon ADD CONSTRAINT PK_HD_PDM FOREIGN KEY (MaPhieuDat) REFERENCES PhieuDatMon(MaPhieu);
