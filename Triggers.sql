@@ -167,3 +167,27 @@ BEGIN
     LEFT JOIN TheKhachHang tk ON i.MaTheKhachHang = tk.MaThe;
 END;
 
+--6. Phiếu đặt món ở một chi nhánh chỉ được tạo bởi nhân viên thuộc cùng chi nhánh
+GO
+IF OBJECT_ID('TRG_Check_NVPhieuDatMon', 'TR') IS NOT NULL
+    DROP TRIGGER TRG_Check_NVPhieuDatMon;
+GO
+CREATE TRIGGER TRG_Check_NVPhieuDatMon
+ON PhieuDatMon
+FOR INSERT
+AS
+BEGIN
+    DECLARE @MaChiNhanh VARCHAR(10);
+    SELECT @MaChiNhanh = MaChiNhanh FROM INSERTED;
+    IF NOT EXISTS (
+        SELECT 1
+        FROM NhanVien nv
+        JOIN INSERTED i ON nv.MaChiNhanh = i.MaChiNhanh
+        WHERE nv.IDNhanVien = i.IDNhanVien
+    )
+    BEGIN
+        RAISERROR('Nhân viên phải thuộc đúng chi nhánh.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+END;
+
