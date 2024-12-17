@@ -113,18 +113,19 @@ BEGIN
 END;
 GO
 
---5. Tổng tiền trong hóa đơn phải bằng số lượng * đơn giá trong phiếu đặt món
+--5. Tổng tiền trong hóa đơn phải bằng số lượng * đơn giá trong phiếu đặt món, cập nhật giảm giá khi thêm thẻ
 GO
-IF OBJECT_ID('trg_CheckTongTienHoaDon', 'TR') IS NOT NULL
-    DROP TRIGGER trg_CheckTongTienHoaDon;
+IF OBJECT_ID('trg_HoaDon_Insert', 'TR') IS NOT NULL
+    DROP TRIGGER trg_HoaDon_Insert;
 GO
-CREATE TRIGGER trg_CheckTongTienHoaDon
+CREATE TRIGGER trg_HoaDon_Insert
 ON HoaDon
 AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Tính TongTien tạm thời từ ChiTietPhieuDat
+
+    --  Kiểm tra và cập nhật TongTien từ ChiTietPhieuDat
     IF EXISTS (
         SELECT 1
         FROM inserted i
@@ -151,4 +152,18 @@ BEGIN
     )
     FROM HoaDon hd
     INNER JOIN inserted i ON hd.MaHoaDon = i.MaHoaDon;
+
+    --  Cập nhật giảm giá (Giam) dựa trên LoaiThe
+    UPDATE hd
+    SET hd.Giam = 
+        CASE 
+            WHEN tk.LoaiThe = 'Membership' THEN hd.TongTien * 0.02
+            WHEN tk.LoaiThe = 'Silver' THEN hd.TongTien * 0.05
+            WHEN tk.LoaiThe = 'Gold' THEN hd.TongTien * 0.07
+            ELSE 0
+        END
+    FROM HoaDon hd
+    INNER JOIN inserted i ON hd.MaHoaDon = i.MaHoaDon
+    LEFT JOIN TheKhachHang tk ON i.MaTheKhachHang = tk.MaThe;
 END;
+

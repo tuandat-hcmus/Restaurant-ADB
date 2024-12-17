@@ -18,7 +18,7 @@ CREATE TABLE NhanVien (
     IDNhanVien VARCHAR(10) PRIMARY KEY,
     HoTen NVARCHAR(50) NOT NULL,
     NgaySinh DATE,
-    GioiTinh NVARCHAR(3) CHECK (GioiTinh IN ('Nam', 'Nữ')),
+    GioiTinh NVARCHAR(3) CHECK (GioiTinh IN (N'Nam', N'Nữ')),
     DiaChi NVARCHAR(50) NOT NULL,
     Luong DECIMAL(10, 2) CHECK (Luong > 0) NOT NULL,
     NgayVaoLam DATE NOT NULL,
@@ -52,12 +52,12 @@ CREATE TABLE TheKhachHang (
     HoTen NVARCHAR(50) NOT NULL,
     CCCD VARCHAR(12) NOT NULL,
     Email VARCHAR(50),
-    GioiTinh VARCHAR(3) CHECK (GioiTinh IN ('Nam', 'Nữ')),
+    GioiTinh NVARCHAR(3) CHECK (GioiTinh IN (N'Nam', N'Nữ')),
     LoaiThe VARCHAR(10) CHECK (LoaiThe IN ('Membership', 'Silver', 'Gold')) NOT NULL,
     NgayDat DATE NOT NULL,
     TongGiaTri INT CHECK (TongGiaTri > 0) NOT NULL,
     NgayLap DATE NOT NULL,
-    TinhTrang VARCHAR(10) CHECK (TinhTrang IN ('Đang hoạt động', 'Đã hủy')),
+    TinhTrang NVARCHAR(20) CHECK (TinhTrang IN (N'Đang hoạt động', N'Đã hủy')),
     IDKhachHang VARCHAR(10),
     NhanVienLap VARCHAR(10) NOT NULL
 );
@@ -74,7 +74,7 @@ CREATE TABLE PhieuDatMon (
 -- Tạo bảng PhieuTrucTuyen
 CREATE TABLE PhieuTrucTuyen (
     MaPhieu VARCHAR(10) PRIMARY KEY,
-    SoKhach INT CHECK (SoKhach > 1),
+    SoKhach INT CHECK (SoKhach >= 1),
     NgayDat DATE NOT NULL,
     GioDen TIME NOT NULL,
     GhiChu NVARCHAR(100),
@@ -144,7 +144,7 @@ CREATE TABLE ChiTietThucDon (
     MaChiNhanh VARCHAR(10),
     MaMonAn VARCHAR(10),
     MaKhuVuc VARCHAR(10),
-    TinhTrang NVARCHAR(10) CHECK (TinhTrang IN ('Có', 'Không')) NOT NULL,
+    TinhTrang NVARCHAR(10) CHECK (TinhTrang IN (N'Có', N'Không')) NOT NULL,
 	PRIMARY KEY (MaChiNhanh, MaMonAn, MaKhuVuc)
 );
 
