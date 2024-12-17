@@ -1,0 +1,154 @@
+--1. Giờ đến > giờ hiện tại trong phiếu trực tuyến
+GO
+IF OBJECT_ID('TRG_Check_GioDen', 'TR') IS NOT NULL
+    DROP TRIGGER TRG_Check_GioDen;
+GO
+CREATE TRIGGER TRG_Check_GioDen
+ON PhieuTrucTuyen
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted
+        WHERE GioDen <= CONVERT(TIME, GETDATE())
+    )
+    BEGIN
+        RAISERROR ('Giờ đến phải lớn hơn giờ hiện tại.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO PhieuTrucTuyen (MaPhieu, SoKhach, NgayDat, GioDen, GhiChu, SDT)
+        SELECT MaPhieu, SoKhach, NgayDat, GioDen, GhiChu, SDT
+        FROM inserted;
+    END
+END;
+
+-- 2. Mỗi nhân viên làm việc tại 1 chi nhánh tại một thời điểm cụ thể
+GO
+IF OBJECT_ID('TRG_Check_LichSuLamViec', 'TR') IS NOT NULL
+    DROP TRIGGER TRG_Check_LichSuLamViec;
+GO
+CREATE TRIGGER TRG_Check_LichSuLamViec
+ON LichSuLamViec
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted AS i
+        JOIN LichSuLamViec AS l
+        ON i.IDNhanVien = l.IDNhanVien
+           AND i.MaChiNhanh <> l.MaChiNhanh
+           AND (
+               (i.NgayBatDau BETWEEN l.NgayBatDau AND ISNULL(l.NgayKetThuc, '9999-12-31'))
+               OR
+               (ISNULL(i.NgayKetThuc, '9999-12-31') BETWEEN l.NgayBatDau AND ISNULL(l.NgayKetThuc, '9999-12-31'))
+               OR
+               (l.NgayBatDau BETWEEN i.NgayBatDau AND ISNULL(i.NgayKetThuc, '9999-12-31'))
+           )
+    )
+    BEGIN
+        RAISERROR ('Một nhân viên không thể làm việc tại nhiều chi nhánh trong cùng một thời gian.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO LichSuLamViec (IDNhanVien, NgayBatDau, NgayKetThuc, MaChiNhanh)
+        SELECT IDNhanVien, NgayBatDau, NgayKetThuc, MaChiNhanh
+        FROM inserted;
+    END
+END;
+
+-- 3. Ngày sinh của nhân viên < hiện tại 15 năm
+GO
+IF OBJECT_ID('TRG_Check_Tuoi', 'TR') IS NOT NULL
+    DROP TRIGGER TRG_Check_Tuoi;
+GO
+CREATE TRIGGER TRG_Check_Tuoi
+ON NhanVien
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted
+        WHERE DATEDIFF(YEAR, NgaySinh, GETDATE()) < 15
+    )
+    BEGIN
+        RAISERROR ('Ngày sinh nhân viên phải đủ 15 tuổi.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+    ELSE
+    BEGIN
+        -- Chèn dữ liệu vào bảng NhanVien
+        INSERT INTO NhanVien (IDNhanVien, HoTen, NgaySinh, GioiTinh, DiaChi, Luong, NgayVaoLam, NgayNghiViec, MaBoPhan, MaChiNhanh, Username, Password)
+        SELECT IDNhanVien, HoTen, NgaySinh, GioiTinh, DiaChi, Luong, NgayVaoLam, NgayNghiViec, MaBoPhan, MaChiNhanh, Username, Password
+        FROM inserted;
+    END
+END;
+
+--4. Nhân viên quản lí chi nhánh phải thuộc chi nhánh đó
+GO
+IF OBJECT_ID('TRG_Check_NVQL', 'TR') IS NOT NULL
+    DROP TRIGGER TRG_Check_NVQL;
+GO
+CREATE TRIGGER TRG_Check_NVQL
+ON ChiNhanh
+AFTER UPDATE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        LEFT JOIN NhanVien nv
+        ON i.MaNVQL = nv.IDNhanVien AND i.MaChiNhanh = nv.MaChiNhanh
+        WHERE i.MaNVQL IS NOT NULL AND nv.IDNhanVien IS NULL
+    )
+    BEGIN
+        RAISERROR ('Nhân viên quản lý phải thuộc chi nhánh.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+END;
+GO
+
+--5. Tổng tiền trong hóa đơn phải bằng số lượng * đơn giá trong phiếu đặt món
+GO
+IF OBJECT_ID('trg_CheckTongTienHoaDon', 'TR') IS NOT NULL
+    DROP TRIGGER trg_CheckTongTienHoaDon;
+GO
+CREATE TRIGGER trg_CheckTongTienHoaDon
+ON HoaDon
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Tính TongTien tạm thời từ ChiTietPhieuDat
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        LEFT JOIN (
+            SELECT MaPhieu, SUM(SoLuong * DonGia) AS TongTienTam
+            FROM ChiTietPhieuDat
+            GROUP BY MaPhieu
+        ) ct ON i.MaPhieuDat = ct.MaPhieu
+        WHERE ISNULL(ct.TongTienTam, 0) = 0
+    )
+    BEGIN
+        RAISERROR('TongTien bằng 0.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END;
+
+    UPDATE hd
+    SET TongTien = ISNULL(
+        (
+            SELECT SUM(ct.SoLuong * ct.DonGia)
+            FROM ChiTietPhieuDat ct
+            WHERE ct.MaPhieu = i.MaPhieuDat
+        ), 0
+    )
+    FROM HoaDon hd
+    INNER JOIN inserted i ON hd.MaHoaDon = i.MaHoaDon;
+END;
