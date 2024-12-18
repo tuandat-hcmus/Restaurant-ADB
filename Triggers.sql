@@ -165,6 +165,13 @@ BEGIN
     FROM HoaDon hd
     INNER JOIN inserted i ON hd.MaHoaDon = i.MaHoaDon
     LEFT JOIN TheKhachHang tk ON i.MaTheKhachHang = tk.MaThe;
+
+    -- Nếu thẻ khách hàng tồn tại, cộng thêm giá trị vào TongGiaTri trong TheKhachHang
+    UPDATE tk
+    SET TongGiaTri = ISNULL(tk.TongGiaTri, 0) + (hd.TongTien / 1000)
+    FROM TheKhachHang tk
+    INNER JOIN inserted i ON tk.MaThe = i.MaTheKhachHang
+    INNER JOIN HoaDon hd ON i.MaHoaDon = hd.MaHoaDon;
 END;
 
 --6. Phiếu đặt món ở một chi nhánh chỉ được tạo bởi nhân viên thuộc cùng chi nhánh
