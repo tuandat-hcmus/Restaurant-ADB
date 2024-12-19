@@ -3,14 +3,14 @@ package com.example.BackEnd.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class PhieuDatMon {
     @Id
     @Column(name = "MaPhieu", nullable = false, length = 10)

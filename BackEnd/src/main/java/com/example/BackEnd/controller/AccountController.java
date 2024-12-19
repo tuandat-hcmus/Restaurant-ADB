@@ -16,7 +16,7 @@ public class AccountController {
     @Autowired
     AccountService accountService;
     
-    /**
+    /*
      * login returns: 
      * {
      *     "message": "",
