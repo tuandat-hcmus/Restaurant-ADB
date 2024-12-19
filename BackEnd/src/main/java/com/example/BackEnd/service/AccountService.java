@@ -1,7 +1,10 @@
 package com.example.BackEnd.service;
 
 import com.example.BackEnd.model.Account;
+import com.example.BackEnd.model.KhachHang;
 import com.example.BackEnd.model.NhanVien;
+import com.example.BackEnd.repository.ChiNhanhRepo;
+import com.example.BackEnd.repository.KhachHangRepo;
 import com.example.BackEnd.repository.NhanVienRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +18,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class AccountService {
 
     @Autowired
     NhanVienRepo nhanVienRepo;
+    
+    @Autowired
+    KhachHangRepo khachHangRepo;
+    
+    @Autowired
+    ChiNhanhRepo chiNhanhRepo;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -30,11 +40,9 @@ public class AccountService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
-    public ResponseEntity<?> register(NhanVien nhanVien) {
+    public ResponseEntity<?> empRegister(NhanVien nhanVien) {
         try {
-
             String encodedPassword = encoder.encode(nhanVien.getPassword());
-
             nhanVien.setPassword(encodedPassword);
             
             return new ResponseEntity<>(nhanVienRepo.insertNhanVien(
@@ -51,11 +59,24 @@ public class AccountService {
             ), HttpStatus.CREATED);
         }
         catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    public ResponseEntity<?> cusRegister(KhachHang khachHang) {
+        try {
+            String encodedPassword = encoder.encode(khachHang.getPassword());
+            khachHang.setPassword(encodedPassword);
+
+            return new ResponseEntity<>(khachHangRepo.insertKhachHang(khachHang.getUsername(), khachHang.getPassword()), HttpStatus.CREATED);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Map<String, Object>> verify(Account user) {
+
+    public ResponseEntity<Map<String, Object>> verify(Account user, boolean isEmp) {
 
         Map<String, Object> response = new HashMap<>();
 
@@ -64,7 +85,13 @@ public class AccountService {
                 || user.getPassword() == null || user.getPassword().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-            user.setUsername("EMPLOYEE_" + user.getUsername());
+            if (isEmp) {
+                user.setUsername("EMPLOYEE_" + user.getUsername());
+                user.setRole("employee");
+            }
+            else {
+                user.setRole("customer");
+            }
 
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));

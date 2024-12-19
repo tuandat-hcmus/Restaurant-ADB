@@ -1,6 +1,7 @@
 package com.example.BackEnd.controller;
 
 import com.example.BackEnd.model.Account;
+import com.example.BackEnd.model.KhachHang;
 import com.example.BackEnd.model.NhanVien;
 import com.example.BackEnd.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,22 @@ public class AccountController {
     AccountService accountService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody NhanVien nhanVien) {
-        return accountService.register(nhanVien);
+    public ResponseEntity<?> empRegister(@RequestBody NhanVien nhanVien) {
+        return accountService.empRegister(nhanVien);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Account account) {
-        return accountService.verify(account);
+    public ResponseEntity<?> empLogin(@RequestBody Account account) {
+        return accountService.verify(account, true);
     }
 
+    @PostMapping("/cusRegister")
+    public ResponseEntity<?> cusRegister(@RequestBody KhachHang khachHang) {
+        return accountService.cusRegister(khachHang);
+    }
 
+    @PostMapping("/cusLogin")
+    public ResponseEntity<?> cusLogin(@RequestBody Account account) {
+        return accountService.verify(account, false);
+    }
 }
