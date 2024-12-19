@@ -16,6 +16,7 @@ public class MyUserDetailService implements UserDetailsService {
     
     @Autowired
     private NhanVienRepo nhanVienRepo;
+    
     @Autowired
     private KhachHangRepo khachHangRepo;
 

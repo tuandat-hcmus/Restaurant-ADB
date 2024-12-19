@@ -15,6 +15,14 @@ public class AccountController {
 
     @Autowired
     AccountService accountService;
+    
+    /**
+     * login returns: 
+     * {
+     *     "message": "",
+     *     "token": ""
+     * }
+     */
 
     @PostMapping("/register")
     public ResponseEntity<?> empRegister(@RequestBody NhanVien nhanVien) {

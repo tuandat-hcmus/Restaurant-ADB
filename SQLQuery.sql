@@ -6,6 +6,7 @@ SELECT SUM(TongTien) AS DoanhThu
 FROM HoaDon
 WHERE CONVERT(DATE, NgayGioXuat) = @NgayXuat;
 
+select count(PhieuDatMon.MaPhieu) as sl, ChiNhanh.MaChiNhanh from ChiNhanh join PhieuDatMon on ChiNhanh.MaChiNhanh = PhieuDatMon.MaChiNhanh group by ChiNhanh.MaChiNhanh
 
 --Tính doanh thu theo tháng
 DECLARE @Thang INT;
@@ -33,8 +34,8 @@ WHERE YEAR(NgayGioXuat) = @Nam;
 
 --2. Xem danh sách nhân viên, điểm phục vụ của mỗi nhân viên -- Index trên PhieuDanhGia(IDNhanVien), DanhGia(MaPhieu), Partition PhieuDanhGia theo quý / năm
 -- Theo ngày
-DECLARE @NgayXuat DATE = '2020-02-20';
-DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @NgayXuat DATE = '2021-07-24';
+DECLARE @MaChiNhanh VARCHAR(10) = 'YRJJQDHW';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
@@ -42,12 +43,15 @@ WHERE pd.NgayLap = @NgayXuat AND nv.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 -- Theo tháng
-DECLARE @Thang INT = 1;
-DECLARE @Nam INT = 2021;
-DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @Thang INT = 5;
+DECLARE @Nam INT = 2020;
+DECLARE @MaChiNhanh VARCHAR(10) = '00RTNV';
 
-SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
+SELECT * --nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
+WHERE MONTH(pd.NgayLap) = 5 AND YEAR(pd.NgayLap) = 2020-- AND nv.MaChiNhanh = @MaChiNhanh
+order by pd.MaChiNhanh, pd.NgayLap
+
 WHERE MONTH(pd.NgayLap) = @Thang AND YEAR(pd.NgayLap) = @Nam AND nv.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 

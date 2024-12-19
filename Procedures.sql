@@ -94,37 +94,6 @@ BEGIN
 END;
 GO
 
---DECLARE @HoTen NVARCHAR(50) = 'John';
---DECLARE @NgaySinh DATE = '2000-01-01';
---DECLARE @GioiTinh NVARCHAR(10) = 'Nam';
---DECLARE @DiaChi NVARCHAR(50) = 'New York';
---DECLARE @Luong DECIMAL(10, 2) = 100000;
---DECLARE @NgayVaoLam DATE = '2021-01-01';
---DECLARE @MaBoPhan VARCHAR(10) = '43A725';
---DECLARE @MaChiNhanh VARCHAR(10) = '1V8TVJKJN5';
---DECLARE @Username VARCHAR(50) = 'test';
---DECLARE @Password VARCHAR(50) = '123';
-
---EXEC InsertNhanVien 
---    @HoTen = @HoTen,
---    @NgaySinh = @NgaySinh,
---    @GioiTinh = @GioiTinh,
---    @DiaChi = @DiaChi,
---    @Luong = @Luong,
---    @NgayVaoLam = @NgayVaoLam,
---    @MaBoPhan = @MaBoPhan,
---    @MaChiNhanh = @MaChiNhanh,
---    @Username = @Username,
---    @Password = @Password;
 
 
-    select * from NhanVien where Username = 'test'
-
-    delete from NhanVien
-    where Username = 'EMPLOYEE_test'
-
-    select * from NhanVien where Password != null
-
-    select * from BoPhan_ChiNhanh
-
-    select * from KhachHang where IDKhachHang = '1';
+-- 2.1 
