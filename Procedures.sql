@@ -72,32 +72,50 @@ BEGIN
     INSERT INTO NhanVien 
     VALUES (@IDNhanVien, @HoTen, @NgaySinh, @GioiTinh, @DiaChi, @Luong, @NgayVaoLam, NULL, @MaBoPhan, @MaChiNhanh, @Username, @Password);
 END;
+GO
 
 
+-- Tạo khách hàng
+CREATE PROCEDURE InsertKhachHang
+    @Username VARCHAR(50),
+    @Password NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @IDKhachHang VARCHAR(10) = LEFT(NEWID(), 10);
 
+    IF EXISTS (SELECT 1 FROM NhanVien WHERE @IDKhachHang = @IDKhachHang)
+    BEGIN
+        SET @IDKhachHang = LEFT(NEWID(), 10);
+    END
 
-DECLARE @HoTen NVARCHAR(50) = 'John';
-DECLARE @NgaySinh DATE = '2000-01-01';
-DECLARE @GioiTinh NVARCHAR(10) = 'Nam';
-DECLARE @DiaChi NVARCHAR(50) = 'New York';
-DECLARE @Luong DECIMAL(10, 2) = 100000;
-DECLARE @NgayVaoLam DATE = '2021-01-01';
-DECLARE @MaBoPhan VARCHAR(10) = '43A725';
-DECLARE @MaChiNhanh VARCHAR(10) = '1V8TVJKJN5';
-DECLARE @Username VARCHAR(50) = 'test';
-DECLARE @Password VARCHAR(50) = '123';
+    INSERT INTO KhachHang 
+    VALUES (@IDKhachHang, @Username, @Password);
+END;
+GO
 
-EXEC InsertNhanVien 
-    @HoTen = @HoTen,
-    @NgaySinh = @NgaySinh,
-    @GioiTinh = @GioiTinh,
-    @DiaChi = @DiaChi,
-    @Luong = @Luong,
-    @NgayVaoLam = @NgayVaoLam,
-    @MaBoPhan = @MaBoPhan,
-    @MaChiNhanh = @MaChiNhanh,
-    @Username = @Username,
-    @Password = @Password;
+--DECLARE @HoTen NVARCHAR(50) = 'John';
+--DECLARE @NgaySinh DATE = '2000-01-01';
+--DECLARE @GioiTinh NVARCHAR(10) = 'Nam';
+--DECLARE @DiaChi NVARCHAR(50) = 'New York';
+--DECLARE @Luong DECIMAL(10, 2) = 100000;
+--DECLARE @NgayVaoLam DATE = '2021-01-01';
+--DECLARE @MaBoPhan VARCHAR(10) = '43A725';
+--DECLARE @MaChiNhanh VARCHAR(10) = '1V8TVJKJN5';
+--DECLARE @Username VARCHAR(50) = 'test';
+--DECLARE @Password VARCHAR(50) = '123';
+
+--EXEC InsertNhanVien 
+--    @HoTen = @HoTen,
+--    @NgaySinh = @NgaySinh,
+--    @GioiTinh = @GioiTinh,
+--    @DiaChi = @DiaChi,
+--    @Luong = @Luong,
+--    @NgayVaoLam = @NgayVaoLam,
+--    @MaBoPhan = @MaBoPhan,
+--    @MaChiNhanh = @MaChiNhanh,
+--    @Username = @Username,
+--    @Password = @Password;
 
 
     select * from NhanVien where Username = 'test'
@@ -107,4 +125,6 @@ EXEC InsertNhanVien
 
     select * from NhanVien where Password != null
 
-    
+    select * from BoPhan_ChiNhanh
+
+    select * from KhachHang where IDKhachHang = '1';

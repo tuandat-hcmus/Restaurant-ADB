@@ -2003,10 +2003,10 @@ Version:4.6.2.5848-->
           <ForeignKey>False</ForeignKey>
           <Unique>False</Unique>
           <AllowsNulls>True</AllowsNulls>
-          <SqlType>Varchar</SqlType>
+          <SqlType>NVarchar</SqlType>
           <Precision>0</Precision>
           <Scale>0</Scale>
-          <DefinedSize>50</DefinedSize>
+          <DefinedSize>255</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
             <DisplayName>Regex Generator</DisplayName>
@@ -2027,11 +2027,11 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">NullProportion</key>
-                <value type="string">1</value>
+                <value type="string">0.01</value>
               </element>
               <element>
                 <key type="string">Seed</key>
-                <value type="string">7170</value>
+                <value type="string">7171</value>
               </element>
               <element>
                 <key type="string">Unique</key>
@@ -3586,10 +3586,10 @@ Version:4.6.2.5848-->
           <ForeignKey>False</ForeignKey>
           <Unique>False</Unique>
           <AllowsNulls>True</AllowsNulls>
-          <SqlType>Varchar</SqlType>
+          <SqlType>NVarchar</SqlType>
           <Precision>0</Precision>
           <Scale>0</Scale>
-          <DefinedSize>50</DefinedSize>
+          <DefinedSize>255</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
             <DisplayName>Regex Generator</DisplayName>
@@ -3610,11 +3610,11 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">NullProportion</key>
-                <value type="string">1</value>
+                <value type="string">0.01</value>
               </element>
               <element>
                 <key type="string">Seed</key>
-                <value type="string">13323</value>
+                <value type="string">13324</value>
               </element>
               <element>
                 <key type="string">Unique</key>
@@ -4138,7 +4138,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">17:00:00</value>
+                <value type="string">22:00:00</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>

@@ -28,7 +28,7 @@ END
 -- Đóng và giải phóng cursor
 CLOSE chiNhanh_cursor;
 DEALLOCATE chiNhanh_cursor;
-
+Go
 
 
 
@@ -74,8 +74,8 @@ DEALLOCATE db_cursor;
 
 -- Fix pass nvarchar(255)
 
-ALTER TABLE NhanVien
-ALTER COLUMN Password NVARCHAR(255);
+--ALTER TABLE NhanVien
+--ALTER COLUMN Password NVARCHAR(255);
 
-ALTER TABLE KhachHang
-ALTER COLUMN Password NVARCHAR(255);
+--ALTER TABLE KhachHang
+--ALTER COLUMN Password NVARCHAR(255);
