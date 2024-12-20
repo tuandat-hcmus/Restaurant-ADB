@@ -1,36 +1,45 @@
 -- 1. Tính doanh thu --Partition HoaDon theo quý / năm
 -- Tính doanh thu theo ngày
-DECLARE @NgayXuat DATE;
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 
-SELECT SUM(TongTien) AS DoanhThu
+SELECT 
+    CONVERT(DATE, NgayGioXuat) AS Ngay,
+    SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE CONVERT(DATE, NgayGioXuat) = @NgayXuat;
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+GROUP BY CONVERT(DATE, NgayGioXuat)
+ORDER BY CONVERT(DATE, NgayGioXuat);
 
-select count(PhieuDatMon.MaPhieu) as sl, ChiNhanh.MaChiNhanh from ChiNhanh join PhieuDatMon on ChiNhanh.MaChiNhanh = PhieuDatMon.MaChiNhanh group by ChiNhanh.MaChiNhanh
 
 --Tính doanh thu theo tháng
-DECLARE @Thang INT;
-DECLARE @Nam INT;
-
-SELECT SUM(TongTien) AS DoanhThu
+SELECT 
+    CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
+    SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE MONTH(NgayGioXuat) = @Thang AND YEAR(NgayGioXuat) = @Nam
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
+ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
 
 
 --Tính doanh thu theo quý
-DECLARE @Quy INT;
-DECLARE @Nam INT;
-
-SELECT SUM(TongTien) AS DoanhThu
+SELECT 
+    CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
+    SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE YEAR(NgayGioXuat) = @Nam AND DATEPART(QUARTER, NgayGioXuat) = @Quy;
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
+ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
 
 
 --Tính doanh thu theo năm
-DECLARE @Nam INT;
-SELECT SUM(TongTien) AS DoanhThu
+SELECT 
+    YEAR(NgayGioXuat) AS Nam,
+    SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE YEAR(NgayGioXuat) = @Nam;
+WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+GROUP BY YEAR(NgayGioXuat)
+ORDER BY YEAR(NgayGioXuat);
 
 --2. Xem danh sách nhân viên, điểm phục vụ của mỗi nhân viên -- Index trên PhieuDanhGia(IDNhanVien), DanhGia(MaPhieu), Partition PhieuDanhGia theo quý / năm
 -- Theo ngày
@@ -39,48 +48,57 @@ DECLARE @MaChiNhanh VARCHAR(10) = 'YRJJQDHW';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
-WHERE pd.NgayLap = @NgayXuat AND nv.MaChiNhanh = @MaChiNhanh
+WHERE pd.NgayLap = @NgayXuat AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 -- Theo tháng
-DECLARE @Thang INT = 5;
+DECLARE @Thang INT = 4;
 DECLARE @Nam INT = 2020;
-DECLARE @MaChiNhanh VARCHAR(10) = '00RTNV';
+DECLARE @MaChiNhanh VARCHAR(10) = '00X0M9';
 
-SELECT * --nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
+SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
-WHERE MONTH(pd.NgayLap) = 5 AND YEAR(pd.NgayLap) = 2020-- AND nv.MaChiNhanh = @MaChiNhanh
-order by pd.MaChiNhanh, pd.NgayLap
-
-WHERE MONTH(pd.NgayLap) = @Thang AND YEAR(pd.NgayLap) = @Nam AND nv.MaChiNhanh = @MaChiNhanh
+WHERE MONTH(pd.NgayLap) = @Thang AND YEAR(pd.NgayLap) = @Nam AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 -- Theo quý
-DECLARE @Quy INT = 1;
-DECLARE @Nam INT = 2021;
-DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @Quy INT = 2;
+DECLARE @Nam INT = 2020;
+DECLARE @MaChiNhanh VARCHAR(10) = '3YBNWW';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
-WHERE DATEPART(QUARTER, pd.NgayLap) = @Quy AND YEAR(pd.NgayLap) = @Nam AND nv.MaChiNhanh = @MaChiNhanh
+WHERE DATEPART(QUARTER, pd.NgayLap) = @Quy AND YEAR(pd.NgayLap) = @Nam AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 -- Theo năm
-DECLARE @Nam INT = 2021;
-DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @Nam INT = 2020;
+DECLARE @MaChiNhanh VARCHAR(10) = '3YBNWW';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
-WHERE YEAR(pd.NgayLap) = @Nam AND nv.MaChiNhanh = @MaChiNhanh
+WHERE YEAR(pd.NgayLap) = @Nam AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 
 --3. Tìm nhân viên theo chi nhánh -- Index trên NhanVien(MaChiNhanh)
-DECLARE @MaChiNhanh VARCHAR(10);
+-- Tất cả
+DECLARE @MaChiNhanh VARCHAR(10) = 'YRJJQDHW';
 
 SELECT nv.IDNhanVien, nv.HoTen, nv.NgaySinh, nv.GioiTinh, nv.DiaChi, nv.NgayVaoLam, nv.NgayNghiViec, nv.MaBoPhan
-FROM ChiNhanh cn JOIN NhanVien nv ON cn.MaChiNhanh = nv.MaChiNhanh
-WHERE cn.MaChiNhanh = @MaChiNhanh;
+FROM NhanVien nv
+WHERE nv.MaChiNhanh = @MaChiNhanh;
+
+-- Họ tên
+DECLARE @MaChiNhanh VARCHAR(10);
+DECLARE @HoTen NVARCHAR(50);
+
+SET @HoTen = '%' + @HoTen + '%';
+
+SELECT nv.IDNhanVien, nv.HoTen, nv.NgaySinh, nv.GioiTinh, nv.DiaChi, nv.NgayVaoLam, nv.NgayNghiViec, nv.MaBoPhan
+FROM NhanVien nv 
+WHERE nv.MaChiNhanh = @MaChiNhanh AND nv.HoTen LIKE @HoTen;
+
 
 --4. Thêm, xóa, cập nhật phiếu đặt món
 -- Thêm

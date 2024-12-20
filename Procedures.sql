@@ -96,4 +96,142 @@ GO
 
 
 
--- 2.1 
+-- Tạo phiếu đặt
+-- DROP PROCEDURE InsertPhieuDatMon
+CREATE PROCEDURE InsertPhieuDatMon
+    @SoBan INT,
+    @IDNhanVien VARCHAR(10),
+    @MaChiNhanh VARCHAR(10)
+AS
+BEGIN
+    DECLARE @MaPhieu VARCHAR(10) = LEFT(NEWID(), 10);
+    DECLARE @NgayLap DATE = GETDATE();
+    IF EXISTS (SELECT 1 FROM PhieuDatMon WHERE MaPhieu = @MaPhieu)
+    BEGIN
+        SET @MaPhieu = LEFT(NEWID(), 10);
+    END
+
+    INSERT INTO PhieuDatMon (MaPhieu, NgayLap, SoBan, IDNhanVien, MaChiNhanh)
+    VALUES (@MaPhieu, @NgayLap, @SoBan, @IDNhanVien, @MaChiNhanh);
+END;
+GO
+
+--exec InsertPhieuDatMon 5, '0012KH', 'YRJJQDHW'
+
+
+
+-- Tính tổng doanh thu
+-- DROP PROCEDURE TongDoanhThu
+CREATE PROCEDURE TongDoanhThu
+    @NgayBD DATE,           -- Ngày bắt đầu
+    @NgayKT DATE,           -- Ngày kết thúc
+    @LoaiTinh INT,          -- Kiểu tính (1: Ngày, 2: Tháng, 3: Quý, 4: Năm)
+    @MaChiNhanh VARCHAR(10) -- Mã chi nhánh (có thể là NULL)
+AS
+BEGIN
+    DECLARE @DoanhThu FLOAT;
+    IF @LoaiTinh = 1  -- Tính theo Ngày
+    BEGIN
+        IF @MaChiNhanh IS NULL
+        BEGIN
+            SELECT 
+                CONVERT(DATE, NgayGioXuat) AS Ngay,
+                SUM(TongTien) AS DoanhThu
+            FROM HoaDon
+            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+            GROUP BY CONVERT(DATE, NgayGioXuat)
+            ORDER BY CONVERT(DATE, NgayGioXuat);
+        END
+        ELSE
+        BEGIN
+            SELECT 
+                CONVERT(DATE, NgayGioXuat) AS Ngay,
+                SUM(TongTien) AS DoanhThu
+            FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+              AND MaChiNhanh = @MaChiNhanh
+            GROUP BY CONVERT(DATE, NgayGioXuat)
+            ORDER BY CONVERT(DATE, NgayGioXuat);
+        END
+    END
+    ELSE IF @LoaiTinh = 2
+    BEGIN
+        IF @MaChiNhanh IS NULL
+        BEGIN
+            SELECT 
+                CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
+                SUM(TongTien) AS DoanhThu
+            FROM HoaDon
+            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+            GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
+            ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
+        END
+        ELSE
+        BEGIN
+            SELECT 
+                CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
+                SUM(TongTien) AS DoanhThu
+            FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+              AND MaChiNhanh = @MaChiNhanh
+            GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
+            ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
+        END
+    END
+    ELSE IF @LoaiTinh = 3
+    BEGIN
+        DECLARE @QuyBD INT = (MONTH(@NgayBD) - 1) / 3 + 1;
+        DECLARE @QuyKT INT = (MONTH(@NgayKT) - 1) / 3 + 1;
+
+        IF @MaChiNhanh IS NULL
+        BEGIN
+            SELECT 
+                CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
+                SUM(TongTien) AS DoanhThu
+            FROM HoaDon
+            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+            GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
+            ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
+        END
+        ELSE
+        BEGIN
+            SELECT 
+                CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
+                SUM(TongTien) AS DoanhThu
+            FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+              AND MaChiNhanh = @MaChiNhanh
+            GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
+            ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
+        END
+    END
+    ELSE IF @LoaiTinh = 4
+    BEGIN
+        IF @MaChiNhanh IS NULL
+        BEGIN
+            SELECT 
+                YEAR(NgayGioXuat) AS Nam,
+                SUM(TongTien) AS DoanhThu
+            FROM HoaDon
+            WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+            GROUP BY YEAR(NgayGioXuat)
+            ORDER BY YEAR(NgayGioXuat);
+        END
+        ELSE
+        BEGIN
+            SELECT 
+                YEAR(NgayGioXuat) AS Nam,
+                SUM(TongTien) AS DoanhThu
+            FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+            WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+              AND MaChiNhanh = @MaChiNhanh
+            GROUP BY YEAR(NgayGioXuat);
+        END
+    END
+END;
+
+EXEC TongDoanhThu
+    @NgayBD = '2020-01-01', 
+    @NgayKT = '2020-05-31', 
+    @LoaiTinh = 2,           -- Tính theo ngày
+    @MaChiNhanh = 'YRJJQDHW'; 
