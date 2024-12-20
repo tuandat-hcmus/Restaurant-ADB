@@ -1,82 +1,104 @@
 -- 1. Tính doanh thu --Partition HoaDon theo quý / năm
 -- Tính doanh thu theo ngày
-DECLARE @NgayXuat DATE;
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 
-SELECT SUM(TongTien) AS DoanhThu
+SELECT 
+    CONVERT(DATE, NgayGioXuat) AS Ngay,
+    SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE CONVERT(DATE, NgayGioXuat) = @NgayXuat;
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+GROUP BY CONVERT(DATE, NgayGioXuat)
+ORDER BY CONVERT(DATE, NgayGioXuat);
 
 
 --Tính doanh thu theo tháng
-DECLARE @Thang INT;
-DECLARE @Nam INT;
-
-SELECT SUM(TongTien) AS DoanhThu
+SELECT 
+    CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
+    SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE MONTH(NgayGioXuat) = @Thang AND YEAR(NgayGioXuat) = @Nam
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
+ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
 
 
 --Tính doanh thu theo quý
-DECLARE @Quy INT;
-DECLARE @Nam INT;
-
-SELECT SUM(TongTien) AS DoanhThu
+SELECT 
+    CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
+    SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE YEAR(NgayGioXuat) = @Nam AND DATEPART(QUARTER, NgayGioXuat) = @Quy;
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
+ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
 
 
 --Tính doanh thu theo năm
-DECLARE @Nam INT;
-SELECT SUM(TongTien) AS DoanhThu
+SELECT 
+    YEAR(NgayGioXuat) AS Nam,
+    SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE YEAR(NgayGioXuat) = @Nam;
+WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+GROUP BY YEAR(NgayGioXuat)
+ORDER BY YEAR(NgayGioXuat);
 
 --2. Xem danh sách nhân viên, điểm phục vụ của mỗi nhân viên -- Index trên PhieuDanhGia(IDNhanVien), DanhGia(MaPhieu), Partition PhieuDanhGia theo quý / năm
 -- Theo ngày
-DECLARE @NgayXuat DATE = '2020-02-20';
-DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @NgayXuat DATE = '2021-07-24';
+DECLARE @MaChiNhanh VARCHAR(10) = 'YRJJQDHW';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
-WHERE pd.NgayLap = @NgayXuat AND nv.MaChiNhanh = @MaChiNhanh
+WHERE pd.NgayLap = @NgayXuat AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 -- Theo tháng
-DECLARE @Thang INT = 1;
-DECLARE @Nam INT = 2021;
-DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @Thang INT = 4;
+DECLARE @Nam INT = 2020;
+DECLARE @MaChiNhanh VARCHAR(10) = '00X0M9';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
-WHERE MONTH(pd.NgayLap) = @Thang AND YEAR(pd.NgayLap) = @Nam AND nv.MaChiNhanh = @MaChiNhanh
+WHERE MONTH(pd.NgayLap) = @Thang AND YEAR(pd.NgayLap) = @Nam AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 -- Theo quý
-DECLARE @Quy INT = 1;
-DECLARE @Nam INT = 2021;
-DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @Quy INT = 2;
+DECLARE @Nam INT = 2020;
+DECLARE @MaChiNhanh VARCHAR(10) = '3YBNWW';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
-WHERE DATEPART(QUARTER, pd.NgayLap) = @Quy AND YEAR(pd.NgayLap) = @Nam AND nv.MaChiNhanh = @MaChiNhanh
+WHERE DATEPART(QUARTER, pd.NgayLap) = @Quy AND YEAR(pd.NgayLap) = @Nam AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 -- Theo năm
-DECLARE @Nam INT = 2021;
-DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @Nam INT = 2020;
+DECLARE @MaChiNhanh VARCHAR(10) = '3YBNWW';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
-WHERE YEAR(pd.NgayLap) = @Nam AND nv.MaChiNhanh = @MaChiNhanh
+WHERE YEAR(pd.NgayLap) = @Nam AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 
 --3. Tìm nhân viên theo chi nhánh -- Index trên NhanVien(MaChiNhanh)
-DECLARE @MaChiNhanh VARCHAR(10);
+-- Tất cả
+DECLARE @MaChiNhanh VARCHAR(10) = 'YRJJQDHW';
 
 SELECT nv.IDNhanVien, nv.HoTen, nv.NgaySinh, nv.GioiTinh, nv.DiaChi, nv.NgayVaoLam, nv.NgayNghiViec, nv.MaBoPhan
-FROM ChiNhanh cn JOIN NhanVien nv ON cn.MaChiNhanh = nv.MaChiNhanh
-WHERE cn.MaChiNhanh = @MaChiNhanh;
+FROM NhanVien nv
+WHERE nv.MaChiNhanh = @MaChiNhanh;
+
+-- Họ tên
+DECLARE @MaChiNhanh VARCHAR(10);
+DECLARE @HoTen NVARCHAR(50);
+
+SET @HoTen = '%' + @HoTen + '%';
+
+SELECT nv.IDNhanVien, nv.HoTen, nv.NgaySinh, nv.GioiTinh, nv.DiaChi, nv.NgayVaoLam, nv.NgayNghiViec, nv.MaBoPhan
+FROM NhanVien nv 
+WHERE nv.MaChiNhanh = @MaChiNhanh AND nv.HoTen LIKE @HoTen;
+
 
 --4. Thêm, xóa, cập nhật phiếu đặt món
 -- Thêm
@@ -106,12 +128,27 @@ SET NgayLap = @NgayLap, SoBan = @SoBan, IDNhanVien = @IDNhanVien, MaChiNhanh = @
 WHERE MaPhieu = @MaPhieu
 
 --5. Tìm kiếm hóa đơn theo khách hàng
-DECLARE @MaTheKhachHang VARCHAR(10);
-DECLARE @NgayXuat DATE;
+DECLARE @MaTheKhachHang VARCHAR(10) = 'BPXF4DCG';
+DECLARE @NgayXuat DATE = '2020-01-08';
+SELECT 
+    hd.TongTien,
+    pd.NgayLap,
+    ctp.SoLuong, ctp.DonGia,
+    m.TenMon
+FROM 
+    HoaDon AS hd
+JOIN 
+    TheKhachHang AS tkh ON hd.MaTheKhachHang = tkh.MaThe
+JOIN 
+    PhieuDatMon AS pd ON pd.MaPhieu = hd.MaPhieuDat
+JOIN 
+    ChiTietPhieuDat AS ctp ON ctp.MaPhieu = pd.MaPhieu
+JOIN 
+    MonAn AS m ON ctp.MaMon = m.MaMon
+WHERE 
+    hd.NgayGioXuat >= @NgayXuat AND hd.NgayGioXuat < DATEADD(DAY, 1, @NgayXuat)
+    AND hd.MaTheKhachHang = @MaTheKhachHang;
 
-SELECT *
-FROM HoaDon hd JOIN TheKhachHang tkh ON hd.MaTheKhachHang = tkh.MaThe
-WHERE CONVERT(DATE, hd.NgayGioXuat) = @NgayXuat;
 
 --6. Thêm, xóa, cập nhật thẻ khách hàng
 -- Thêm 
@@ -155,41 +192,129 @@ WHERE MaThe = @MaThe
 
 -- 7. Tính doanh thu theo chi nhanh --Partition theo quý / năm
 -- Tính doanh thu theo ngày
-DECLARE @NgayXuat DATE = '2020-02-01';
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7'
 
-SELECT SUM(TongTien) AS DoanhThu
-FROM HoaDon hd JOIN PhieuDatMon pd ON hd.MaPhieuDat = pd.MaPhieu
-WHERE CONVERT(DATE, NgayGioXuat) = @NgayXuat AND pd.MaChiNhanh = @MaChiNhanh;
+SELECT 
+    CONVERT(DATE, NgayGioXuat) AS Ngay,
+    SUM(TongTien) AS DoanhThu
+FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+    AND MaChiNhanh = @MaChiNhanh
+GROUP BY CONVERT(DATE, NgayGioXuat)
+ORDER BY CONVERT(DATE, NgayGioXuat);
 
 
 --Tính doanh thu theo tháng
-DECLARE @Thang INT = 1;
-DECLARE @Nam INT = 2021;
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7'
 
-SELECT SUM(TongTien) AS DoanhThu
-FROM HoaDon hd JOIN PhieuDatMon pd ON hd.MaPhieuDat = pd.MaPhieu
-WHERE MONTH(NgayGioXuat) = @Thang AND YEAR(NgayGioXuat) = @Nam AND pd.MaChiNhanh = @MaChiNhanh;
+SELECT 
+    CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
+    SUM(TongTien) AS DoanhThu
+FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+    AND MaChiNhanh = @MaChiNhanh
+GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
+ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
 
 
 --Tính doanh thu theo quý
-DECLARE @Quy INT = 4;
-DECLARE @Nam INT = 2022;
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7'
 
-SELECT SUM(TongTien) AS DoanhThu
-FROM HoaDon hd JOIN PhieuDatMon pd ON hd.MaPhieuDat = pd.MaPhieu
-WHERE YEAR(NgayGioXuat) = @Nam AND DATEPART(QUARTER, NgayGioXuat) = @Quy AND pd.MaChiNhanh = @MaChiNhanh;
+SELECT 
+    CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
+    SUM(TongTien) AS DoanhThu
+FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+    AND MaChiNhanh = @MaChiNhanh
+GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
+ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
 
 
 --Tính doanh thu theo năm
-DECLARE @Nam INT = 2021;
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
 
-SELECT SUM(TongTien) AS DoanhThu
-FROM HoaDon hd JOIN PhieuDatMon pd ON hd.MaPhieuDat = pd.MaPhieu
-WHERE YEAR(NgayGioXuat) = @Nam AND pd.MaChiNhanh = @MaChiNhanh;
+SELECT 
+    YEAR(NgayGioXuat) AS Nam,
+    SUM(TongTien) AS DoanhThu
+FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+    AND MaChiNhanh = @MaChiNhanh
+GROUP BY YEAR(NgayGioXuat)
+ORDER BY YEAR(NgayGioXuat);
+
+--8. Thống kê doanh thu theo từng món
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
+
+WITH BestSellingCTE AS (
+    SELECT 
+        M.MaMon,
+        M.TenMon,
+        CN.MaChiNhanh,
+        KV.TenThanhPho AS Region,
+        SUM(CT.SoLuong) AS TotalQuantitySold
+    FROM 
+        ChiTietPhieuDat CT
+    JOIN 
+        MonAn M ON CT.MaMon = M.MaMon
+    JOIN 
+        PhieuDatMon PD ON CT.MaPhieu = PD.MaPhieu
+    JOIN 
+        HoaDon H ON H.MaPhieuDat = PD.MaPhieu
+    JOIN 
+        ChiNhanh CN ON PD.MaChiNhanh = CN.MaChiNhanh
+    JOIN 
+        KhuVuc KV ON CN.MaKhuVuc = KV.MaKhuVuc
+    WHERE 
+        H.NgayGioXuat BETWEEN @NgayBD AND @NgayKT
+    GROUP BY 
+        M.MaMon, M.TenMon, CN.MaChiNhanh, KV.TenThanhPho
+),
+RankedProducts AS (
+    SELECT
+        TenMon,
+        MaChiNhanh,
+        Region,
+        TotalQuantitySold,
+        ROW_NUMBER() OVER (ORDER BY TotalQuantitySold DESC) AS BestRank,
+        ROW_NUMBER() OVER (ORDER BY TotalQuantitySold ASC) AS LowestRank
+    FROM 
+        BestSellingCTE
+)
+ 
+-- Final Results: Best-Selling and Lowest-Selling Products
+SELECT 
+    'Best-Selling Dish' AS Metric,
+    TenMon, 
+    MaChiNhanh, 
+    Region, 
+    TotalQuantitySold
+FROM 
+    RankedProducts
+WHERE 
+    BestRank = 1
+ 
+UNION ALL
+ 
+SELECT 
+    'Lowest-Selling Dish' AS Metric,
+    TenMon, 
+    MaChiNhanh, 
+    Region, 
+    TotalQuantitySold
+FROM 
+    RankedProducts
+WHERE 
+    LowestRank = 1;
+
 
 
 --9. Chuyển nhân sự giữa các chi nhánh

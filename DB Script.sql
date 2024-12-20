@@ -1,4 +1,4 @@
-﻿USE MASTER
+USE MASTER
 --DROP DATABASE RES_ADB
 GO 
 CREATE DATABASE RES_ADB
@@ -10,7 +10,7 @@ GO
 CREATE TABLE KhachHang (
     IDKhachHang VARCHAR(10) PRIMARY KEY,
     Username VARCHAR(50) UNIQUE,
-	Password varchar(50)
+	Password nvarchar(255)
 );
 
 -- Tạo bảng NhanVien
@@ -26,7 +26,7 @@ CREATE TABLE NhanVien (
     MaBoPhan VARCHAR(10) NOT NULL,
     MaChiNhanh VARCHAR(10) NOT NULL,
     Username VARCHAR(50) UNIQUE,
-	Password varchar(50)
+	Password nvarchar(255)
 );
 
 -- Tạo bảng LichSuTruyCap
