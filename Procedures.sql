@@ -230,7 +230,7 @@ BEGIN
         END
     END
 END;
-
+GO
 --EXEC TongDoanhThu
 --    @NgayBD = '2020-01-01', 
 --    @NgayKT = '2020-05-31', 

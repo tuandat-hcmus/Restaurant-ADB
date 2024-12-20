@@ -1,0 +1,580 @@
+{
+	"info": {
+		"_postman_id": "43221610-c544-4fc5-a76a-45eb68108484",
+		"name": "Res_adb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38642791"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/register",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"hoTen\": \"John\",\r\n    \"ngaySinh\": \"2000-01-01\",\r\n    \"gioiTinh\": \"Nam\",\r\n    \"diaChi\": \"New York\",\r\n    \"luong\": 100000,\r\n    \"ngayVaoLam\": \"2021-01-01\",\r\n    \"ngayNghiViec\": null,\r\n    \"maBoPhan\": \"43A725\",\r\n    \"maChiNhanh\": \"152OC76L7\",\r\n    \"username\": \"test\",\r\n    \"password\": \"123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/cusRegister",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cusRegister",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cusRegister"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/cusLogin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cusLogin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cusLogin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "diem/ngay",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "ngayXuat",
+							"value": "2021-07-24",
+							"type": "text"
+						},
+						{
+							"key": "chiNhanh",
+							"value": "152OC76L7",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/emp/diem/ngay",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"emp",
+						"diem",
+						"ngay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "diem/thang",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "thang",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "nam",
+							"value": "2020",
+							"type": "text"
+						},
+						{
+							"key": "chiNhanh",
+							"value": "152OC76L7",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/emp/diem/thang",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"emp",
+						"diem",
+						"thang"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "diem/quy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "quy",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "nam",
+							"value": "2020",
+							"type": "text"
+						},
+						{
+							"key": "chiNhanh",
+							"value": "152OC76L7",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/emp/diem/quy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"emp",
+						"diem",
+						"quy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "diem/nam",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nam",
+							"value": "2020",
+							"type": "text"
+						},
+						{
+							"key": "chiNhanh",
+							"value": "152OC76L7",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/emp/diem/nam",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"emp",
+						"diem",
+						"nam"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "emp/chinhanh",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/emp/chinhanh/152OC76L7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"emp",
+						"chinhanh",
+						"152OC76L7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "emp/chinhanh/cn/nv",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/emp/chinhanh/152OC76L7/Walton",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"emp",
+						"chinhanh",
+						"152OC76L7",
+						"Walton"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "phieudat/them",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "soBan",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "idNhanVien",
+							"value": "41693",
+							"type": "text"
+						},
+						{
+							"key": "maChiNhanh",
+							"value": "152OC76L7",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/phieudat/them",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"phieudat",
+						"them"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "phieudat/xoa/pd",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/phieudat/xoa/EE1BD5C4-6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"phieudat",
+						"xoa",
+						"EE1BD5C4-6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "doanhthu?ngayBD=2020-01-01&ngayKT=2021-05-31&loai=3&maChiNhanh=YRJJQDHW",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/doanhthu?ngayBD=2020-01-12&ngayKT=2020-01-15&loai=2&maChiNhanh=152OC76L7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"doanhthu"
+					],
+					"query": [
+						{
+							"key": "ngayBD",
+							"value": "2020-01-12"
+						},
+						{
+							"key": "ngayKT",
+							"value": "2020-01-15"
+						},
+						{
+							"key": "loai",
+							"value": "2"
+						},
+						{
+							"key": "maChiNhanh",
+							"value": "152OC76L7"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hoadon/search?maThe=BPXF4DCG&ngayBD=2020-02-16&ngayKT=2020-02-16",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/hoadon/search?maThe=07ZYOA&ngayBD=2020-02-16&ngayKT=2022-02-16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hoadon",
+						"search"
+					],
+					"query": [
+						{
+							"key": "maThe",
+							"value": "07ZYOA"
+						},
+						{
+							"key": "ngayBD",
+							"value": "2020-02-16"
+						},
+						{
+							"key": "ngayKT",
+							"value": "2022-02-16"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

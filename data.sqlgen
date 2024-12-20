@@ -129,7 +129,7 @@ Version:4.6.2.5848-->
       <TableType>Generated</TableType>
       <PopulationDetails version="2" type="PopulationDetails">
         <PopulationType>RowCount</PopulationType>
-        <RowCount>250</RowCount>
+        <RowCount>1000</RowCount>
         <ProportionTableExists>False</ProportionTableExists>
         <Proportion>0</Proportion>
         <TimeToPopulate>0</TimeToPopulate>
@@ -222,7 +222,7 @@ Version:4.6.2.5848-->
       <TableType>Generated</TableType>
       <PopulationDetails version="2" type="PopulationDetails">
         <PopulationType>RowCount</PopulationType>
-        <RowCount>1000</RowCount>
+        <RowCount>50</RowCount>
         <ProportionTableExists>False</ProportionTableExists>
         <Proportion>0</Proportion>
         <TimeToPopulate>0</TimeToPopulate>
@@ -292,13 +292,13 @@ Version:4.6.2.5848-->
           <DefinedSize>50</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.FileListGenerator</GeneratorTypeName>
-            <DisplayName>UK City</DisplayName>
-            <Description>London, Cambridge, Birmingham...</Description>
+            <DisplayName>US City</DisplayName>
+            <Description>New York, Los Angeles, Chicago...</Description>
             <CategoryName>Geographical</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
                 <key type="string">FileName</key>
-                <value type="string">UKCity.txt</value>
+                <value type="string">USCity.txt</value>
               </element>
               <element>
                 <key type="string">Unique</key>
@@ -473,7 +473,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">17:00:00</value>
+                <value type="string">15:00:00</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
@@ -912,7 +912,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MaxValue</key>
-                <value type="string">100000.00</value>
+                <value type="string">200000.00</value>
               </element>
               <element>
                 <key type="string">UseColumnOffset</key>
@@ -954,7 +954,7 @@ Version:4.6.2.5848-->
           <ForeignKeyFillMethod>Unique</ForeignKeyFillMethod>
           <MaxBuckets>1000</MaxBuckets>
           <Seed>0</Seed>
-          <MinRepeats>5</MinRepeats>
+          <MinRepeats>1</MinRepeats>
           <MaxRepeats>10</MaxRepeats>
           <NullsAllowed>False</NullsAllowed>
           <NullProportion>0.01</NullProportion>
@@ -965,7 +965,7 @@ Version:4.6.2.5848-->
       <TableType>Generated</TableType>
       <PopulationDetails version="2" type="PopulationDetails">
         <PopulationType>RowCount</PopulationType>
-        <RowCount>2000</RowCount>
+        <RowCount>1000</RowCount>
         <ProportionTableExists>False</ProportionTableExists>
         <Proportion>0</Proportion>
         <TimeToPopulate>0</TimeToPopulate>
@@ -1063,13 +1063,13 @@ Version:4.6.2.5848-->
           <DefinedSize>10</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
-            <DisplayName>RegexpGenerator</DisplayName>
-            <Description>Used for formatted data</Description>
+            <DisplayName>Regex Generator</DisplayName>
+            <Description>Generates data from a Regular Expression</Description>
             <CategoryName>Generic</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
                 <key type="string">Expression</key>
-                <value type="string">Không|Có</value>
+                <value type="string">Có|Không</value>
               </element>
               <element>
                 <key type="string">UseSequence</key>
@@ -1138,7 +1138,7 @@ Version:4.6.2.5848-->
       <TableType>Generated</TableType>
       <PopulationDetails version="2" type="PopulationDetails">
         <PopulationType>RowCount</PopulationType>
-        <RowCount>5000</RowCount>
+        <RowCount>50000</RowCount>
         <ProportionTableExists>False</ProportionTableExists>
         <Proportion>0</Proportion>
         <TimeToPopulate>0</TimeToPopulate>
@@ -1734,11 +1734,11 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">100000.00</value>
+                <value type="string">20000.00</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
-                <value type="string">1000000.00</value>
+                <value type="string">99999999.99</value>
               </element>
               <element>
                 <key type="string">UseColumnOffset</key>
@@ -1790,11 +1790,11 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">10000.00</value>
+                <value type="string">0.00</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
-                <value type="string">50000.00</value>
+                <value type="string">1000000.00</value>
               </element>
               <element>
                 <key type="string">UseColumnOffset</key>
@@ -1802,11 +1802,11 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">NullsAllowed</key>
-                <value type="string">True</value>
+                <value type="string">False</value>
               </element>
               <element>
                 <key type="string">NullProportion</key>
-                <value type="string">0.25</value>
+                <value type="string">0.01</value>
               </element>
               <element>
                 <key type="string">Seed</key>
@@ -1874,7 +1874,7 @@ Version:4.6.2.5848-->
           <Seed>0</Seed>
           <MinRepeats>1</MinRepeats>
           <MaxRepeats>10</MaxRepeats>
-          <NullsAllowed>False</NullsAllowed>
+          <NullsAllowed>True</NullsAllowed>
           <NullProportion>0.01</NullProportion>
         </value>
         <value version="2" type="ForeignKeyProperty">
@@ -1887,7 +1887,7 @@ Version:4.6.2.5848-->
           <MinRepeats>1</MinRepeats>
           <MaxRepeats>10</MaxRepeats>
           <NullsAllowed>True</NullsAllowed>
-          <NullProportion>0.5</NullProportion>
+          <NullProportion>0.01</NullProportion>
         </value>
       </ForeignKeyProperties>
     </value>
@@ -1921,13 +1921,13 @@ Version:4.6.2.5848-->
           <DefinedSize>10</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
-            <DisplayName>Regex Generator</DisplayName>
-            <Description>Generates data from a Regular Expression</Description>
-            <CategoryName>Generic</CategoryName>
+            <DisplayName>5 Digit IDs</DisplayName>
+            <Description>67815,98234, 71333, 89620, 04231...</Description>
+            <CategoryName>Business</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
                 <key type="string">Expression</key>
-                <value type="string">[A-Z0-9]*</value>
+                <value type="string">[0-9]{5}</value>
               </element>
               <element>
                 <key type="string">UseSequence</key>
@@ -2027,11 +2027,11 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">NullProportion</key>
-                <value type="string">0.01</value>
+                <value type="string">1</value>
               </element>
               <element>
                 <key type="string">Seed</key>
-                <value type="string">7171</value>
+                <value type="string">7170</value>
               </element>
               <element>
                 <key type="string">Unique</key>
@@ -2116,17 +2116,17 @@ Version:4.6.2.5848-->
           <Scale>0</Scale>
           <DefinedSize>50</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
-            <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
-            <DisplayName>Regex Generator</DisplayName>
-            <Description>Generates data from a Regular Expression</Description>
-            <CategoryName>Generic</CategoryName>
+            <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.FileListGenerator</GeneratorTypeName>
+            <DisplayName>US City</DisplayName>
+            <Description>New York, Los Angeles, Chicago...</Description>
+            <CategoryName>Geographical</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
-                <key type="string">Expression</key>
-                <value type="string">[A-Z0-9]*</value>
+                <key type="string">FileName</key>
+                <value type="string">USCity.txt</value>
               </element>
               <element>
-                <key type="string">UseSequence</key>
+                <key type="string">Unique</key>
                 <value type="string">False</value>
               </element>
               <element>
@@ -2140,10 +2140,6 @@ Version:4.6.2.5848-->
               <element>
                 <key type="string">Seed</key>
                 <value type="string">8193</value>
-              </element>
-              <element>
-                <key type="string">Unique</key>
-                <value type="string">False</value>
               </element>
             </GeneratorProperties>
           </Generator>
@@ -2250,7 +2246,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">636503616000000000</value>
+                <value type="string">637134336000000000</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
@@ -2333,7 +2329,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">636503616000000000</value>
+                <value type="string">615991392000000000</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
@@ -2349,7 +2345,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">NullProportion</key>
-                <value type="string">0.7</value>
+                <value type="string">0.25</value>
               </element>
               <element>
                 <key type="string">Seed</key>
@@ -2509,7 +2505,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">636503616000000000</value>
+                <value type="string">637134336000000000</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
@@ -2592,7 +2588,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">636503616000000000</value>
+                <value type="string">637134336000000000</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
@@ -2773,7 +2769,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MaxValue</key>
-                <value type="string">300000.00</value>
+                <value type="string">200000.00</value>
               </element>
               <element>
                 <key type="string">UseColumnOffset</key>
@@ -2885,7 +2881,7 @@ Version:4.6.2.5848-->
       <TableType>Generated</TableType>
       <PopulationDetails version="2" type="PopulationDetails">
         <PopulationType>RowCount</PopulationType>
-        <RowCount>50</RowCount>
+        <RowCount>20</RowCount>
         <ProportionTableExists>False</ProportionTableExists>
         <Proportion>0</Proportion>
         <TimeToPopulate>0</TimeToPopulate>
@@ -2911,13 +2907,13 @@ Version:4.6.2.5848-->
           <DefinedSize>10</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
-            <DisplayName>Regex Generator</DisplayName>
-            <Description>Generates data from a Regular Expression</Description>
-            <CategoryName>Generic</CategoryName>
+            <DisplayName>5 Digit IDs</DisplayName>
+            <Description>67815,98234, 71333, 89620, 04231...</Description>
+            <CategoryName>Business</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
                 <key type="string">Expression</key>
-                <value type="string">[A-Z0-9]*</value>
+                <value type="string">[0-9]{5}</value>
               </element>
               <element>
                 <key type="string">UseSequence</key>
@@ -3019,13 +3015,13 @@ Version:4.6.2.5848-->
           <DefinedSize>10</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
-            <DisplayName>Regex Generator</DisplayName>
-            <Description>Generates data from a Regular Expression</Description>
-            <CategoryName>Generic</CategoryName>
+            <DisplayName>5 Digit IDs</DisplayName>
+            <Description>67815,98234, 71333, 89620, 04231...</Description>
+            <CategoryName>Business</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
                 <key type="string">Expression</key>
-                <value type="string">[A-Z0-9]*</value>
+                <value type="string">[0-9]{5}</value>
               </element>
               <element>
                 <key type="string">UseSequence</key>
@@ -3152,7 +3148,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">621355968000000000</value>
+                <value type="string">615991392000000000</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
@@ -3190,13 +3186,13 @@ Version:4.6.2.5848-->
           <DefinedSize>3</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
-            <DisplayName>RegexpGenerator</DisplayName>
-            <Description>Used for formatted data</Description>
+            <DisplayName>Regex Generator</DisplayName>
+            <Description>Generates data from a Regular Expression</Description>
             <CategoryName>Generic</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
                 <key type="string">Expression</key>
-                <value type="string">Nữ|Nam</value>
+                <value type="string">Nam|Nữ</value>
               </element>
               <element>
                 <key type="string">UseSequence</key>
@@ -3234,13 +3230,13 @@ Version:4.6.2.5848-->
           <DefinedSize>50</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
-            <DisplayName>Regex Generator</DisplayName>
-            <Description>Generates data from a Regular Expression</Description>
-            <CategoryName>Generic</CategoryName>
+            <DisplayName>Address Line (street number)</DisplayName>
+            <Description>123 West Second Way, 6 Fabien Boulevard, 567 Hague St., 11 Oak Drive... </Description>
+            <CategoryName>Geographical</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
                 <key type="string">Expression</key>
-                <value type="string">[A-Z0-9]*</value>
+                <value type="string">([1-9][0-9][0-9]?) (North |East |West |South |||||||||||)(Green |White |Rocky ||||)(Nobel|Fabien|Hague|Oak|Second|First|Cowley|Clarendon|New|Old|Milton) (Way|Street|St.|Avenue|Road|Parkway|Freeway|Drive|Boulevard|Blvd.)</value>
               </element>
               <element>
                 <key type="string">UseSequence</key>
@@ -3379,11 +3375,11 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">636503616000000000</value>
+                <value type="string">637134336000000000</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
-                <value type="string">638080416000000000</value>
+                <value type="string">638395776000000000</value>
               </element>
               <element>
                 <key type="string">UseColumnOffset</key>
@@ -3462,7 +3458,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">636818976000000000</value>
+                <value type="string">637134336000000000</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
@@ -3478,7 +3474,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">NullProportion</key>
-                <value type="string">0.7</value>
+                <value type="string">0.01</value>
               </element>
               <element>
                 <key type="string">Seed</key>
@@ -3562,7 +3558,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">NullsAllowed</key>
-                <value type="string">True</value>
+                <value type="string">False</value>
               </element>
               <element>
                 <key type="string">NullProportion</key>
@@ -3614,7 +3610,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">Seed</key>
-                <value type="string">13324</value>
+                <value type="string">13323</value>
               </element>
               <element>
                 <key type="string">Unique</key>
@@ -3819,7 +3815,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MaxValue</key>
-                <value type="string">10</value>
+                <value type="string">20</value>
               </element>
               <element>
                 <key type="string">UseColumnOffset</key>
@@ -3896,7 +3892,7 @@ Version:4.6.2.5848-->
           </Fields>
           <ForeignKeyFillMethod>RepeatForever</ForeignKeyFillMethod>
           <MaxBuckets>1000</MaxBuckets>
-          <Seed>0</Seed>
+          <Seed>123</Seed>
           <MinRepeats>1</MinRepeats>
           <MaxRepeats>10</MaxRepeats>
           <NullsAllowed>False</NullsAllowed>
@@ -4071,11 +4067,11 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">638702496000000000</value>
+                <value type="string">637134336000000000</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
-                <value type="string">639027360000000000</value>
+                <value type="string">638395776000000000</value>
               </element>
               <element>
                 <key type="string">UseColumnOffset</key>
@@ -4138,7 +4134,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MinValue</key>
-                <value type="string">22:00:00</value>
+                <value type="string">17:00:00</value>
               </element>
               <element>
                 <key type="string">MaxValue</key>
@@ -4385,13 +4381,13 @@ Version:4.6.2.5848-->
           <DefinedSize>12</DefinedSize>
           <Generator version="1" type="GeneratorDetails">
             <GeneratorTypeName>RedGate.SQLDataGenerator.ExpressionGenerators.Regexp.RegexpGenerator</GeneratorTypeName>
-            <DisplayName>Regex Generator</DisplayName>
-            <Description>Generates data from a Regular Expression</Description>
-            <CategoryName>Generic</CategoryName>
+            <DisplayName>Social Security Number</DisplayName>
+            <Description>950-95-8060, 626-39-6597, 763-98-0639...</Description>
+            <CategoryName>Personal</CategoryName>
             <GeneratorProperties type="Dictionary&lt;string, object&gt;" version="1">
               <element>
                 <key type="string">Expression</key>
-                <value type="string">[A-Z0-9]*</value>
+                <value type="string">[0-9]{3}-[0-9]{2}-[0-9]{4}</value>
               </element>
               <element>
                 <key type="string">UseSequence</key>
@@ -4495,7 +4491,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">Seed</key>
-                <value type="string">16396</value>
+                <value type="string">16388</value>
               </element>
               <element>
                 <key type="string">Unique</key>
@@ -4666,7 +4662,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">MaxValue</key>
-                <value type="string">1000</value>
+                <value type="string">1000000</value>
               </element>
               <element>
                 <key type="string">UseColumnOffset</key>
@@ -4805,7 +4801,7 @@ Version:4.6.2.5848-->
               </element>
               <element>
                 <key type="string">Seed</key>
-                <value type="string">16397</value>
+                <value type="string">16393</value>
               </element>
               <element>
                 <key type="string">Unique</key>
