@@ -128,12 +128,27 @@ SET NgayLap = @NgayLap, SoBan = @SoBan, IDNhanVien = @IDNhanVien, MaChiNhanh = @
 WHERE MaPhieu = @MaPhieu
 
 --5. Tìm kiếm hóa đơn theo khách hàng
-DECLARE @MaTheKhachHang VARCHAR(10);
-DECLARE @NgayXuat DATE;
+DECLARE @MaTheKhachHang VARCHAR(10) = 'BPXF4DCG';
+DECLARE @NgayXuat DATE = '2020-01-08';
+SELECT 
+    hd.TongTien,
+    pd.NgayLap,
+    ctp.SoLuong, ctp.DonGia,
+    m.TenMon
+FROM 
+    HoaDon AS hd
+JOIN 
+    TheKhachHang AS tkh ON hd.MaTheKhachHang = tkh.MaThe
+JOIN 
+    PhieuDatMon AS pd ON pd.MaPhieu = hd.MaPhieuDat
+JOIN 
+    ChiTietPhieuDat AS ctp ON ctp.MaPhieu = pd.MaPhieu
+JOIN 
+    MonAn AS m ON ctp.MaMon = m.MaMon
+WHERE 
+    hd.NgayGioXuat >= @NgayXuat AND hd.NgayGioXuat < DATEADD(DAY, 1, @NgayXuat)
+    AND hd.MaTheKhachHang = @MaTheKhachHang;
 
-SELECT *
-FROM HoaDon hd JOIN TheKhachHang tkh ON hd.MaTheKhachHang = tkh.MaThe
-WHERE CONVERT(DATE, hd.NgayGioXuat) = @NgayXuat;
 
 --6. Thêm, xóa, cập nhật thẻ khách hàng
 -- Thêm 
@@ -234,6 +249,72 @@ WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
     AND MaChiNhanh = @MaChiNhanh
 GROUP BY YEAR(NgayGioXuat)
 ORDER BY YEAR(NgayGioXuat);
+
+--8. Thống kê doanh thu theo từng món
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
+
+WITH BestSellingCTE AS (
+    SELECT 
+        M.MaMon,
+        M.TenMon,
+        CN.MaChiNhanh,
+        KV.TenThanhPho AS Region,
+        SUM(CT.SoLuong) AS TotalQuantitySold
+    FROM 
+        ChiTietPhieuDat CT
+    JOIN 
+        MonAn M ON CT.MaMon = M.MaMon
+    JOIN 
+        PhieuDatMon PD ON CT.MaPhieu = PD.MaPhieu
+    JOIN 
+        HoaDon H ON H.MaPhieuDat = PD.MaPhieu
+    JOIN 
+        ChiNhanh CN ON PD.MaChiNhanh = CN.MaChiNhanh
+    JOIN 
+        KhuVuc KV ON CN.MaKhuVuc = KV.MaKhuVuc
+    WHERE 
+        H.NgayGioXuat BETWEEN @NgayBD AND @NgayKT
+    GROUP BY 
+        M.MaMon, M.TenMon, CN.MaChiNhanh, KV.TenThanhPho
+),
+RankedProducts AS (
+    SELECT
+        TenMon,
+        MaChiNhanh,
+        Region,
+        TotalQuantitySold,
+        ROW_NUMBER() OVER (ORDER BY TotalQuantitySold DESC) AS BestRank,
+        ROW_NUMBER() OVER (ORDER BY TotalQuantitySold ASC) AS LowestRank
+    FROM 
+        BestSellingCTE
+)
+ 
+-- Final Results: Best-Selling and Lowest-Selling Products
+SELECT 
+    'Best-Selling Dish' AS Metric,
+    TenMon, 
+    MaChiNhanh, 
+    Region, 
+    TotalQuantitySold
+FROM 
+    RankedProducts
+WHERE 
+    BestRank = 1
+ 
+UNION ALL
+ 
+SELECT 
+    'Lowest-Selling Dish' AS Metric,
+    TenMon, 
+    MaChiNhanh, 
+    Region, 
+    TotalQuantitySold
+FROM 
+    RankedProducts
+WHERE 
+    LowestRank = 1;
+
 
 
 --9. Chuyển nhân sự giữa các chi nhánh

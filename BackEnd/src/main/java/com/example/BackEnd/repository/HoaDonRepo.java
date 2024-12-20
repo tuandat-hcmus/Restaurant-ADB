@@ -23,5 +23,10 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, String> {
         @Param("loai") int loai,
         @Param("maChiNhanh") String maChiNhanh
     );
+
     
+    @Query(value = "EXEC getHoaDonKhachHang :maThe, :ngayBD, :ngayKT", nativeQuery = true)
+    List<Object[]> findHoaDonByMaTheKhachHang(@Param("maThe")String maThe,@Param("ngayBD") LocalDate ngayBD,@Param("ngayKT") LocalDate ngayKT);
+
+
 }
