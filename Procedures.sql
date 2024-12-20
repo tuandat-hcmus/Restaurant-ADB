@@ -231,8 +231,45 @@ BEGIN
     END
 END;
 
-EXEC TongDoanhThu
-    @NgayBD = '2020-01-01', 
-    @NgayKT = '2020-05-31', 
-    @LoaiTinh = 2,           -- Tính theo ngày
-    @MaChiNhanh = 'YRJJQDHW'; 
+--EXEC TongDoanhThu
+--    @NgayBD = '2020-01-01', 
+--    @NgayKT = '2020-05-31', 
+--    @LoaiTinh = 2,           -- Tính theo ngày
+--    @MaChiNhanh = 'YRJJQDHW';
+
+
+-- Hóa đơn theo khách hàng theo ngày
+-- DROP PROCEDURE getHoaDonKhachHang;
+CREATE PROCEDURE getHoaDonKhachHang
+    @MaTheKhachHang VARCHAR(10),
+    @NgayBD DATE,
+    @NgayKT DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        hd.MaHoaDon,
+        hd.TongTien,
+        pd.NgayLap,
+        ctp.SoLuong, 
+        ctp.DonGia,
+        m.TenMon
+    FROM 
+        HoaDon AS hd
+    JOIN 
+        TheKhachHang AS tkh ON hd.MaTheKhachHang = tkh.MaThe
+    JOIN 
+        PhieuDatMon AS pd ON pd.MaPhieu = hd.MaPhieuDat
+    JOIN 
+        ChiTietPhieuDat AS ctp ON ctp.MaPhieu = pd.MaPhieu
+    JOIN 
+        MonAn AS m ON ctp.MaMon = m.MaMon
+    WHERE 
+        pd.NgayLap BETWEEN @NgayBD AND @NgayKT
+        AND hd.MaTheKhachHang = @MaTheKhachHang
+    ORDER BY hd.MaHoaDon, pd.NgayLap
+END;
+GO
+
+-- EXEC getHoaDonKhachHang 'BPXF4DCG', '2020-02-16', '2020-02-16'
