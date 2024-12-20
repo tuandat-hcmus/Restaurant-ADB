@@ -225,7 +225,8 @@ BEGIN
             FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
             WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
               AND MaChiNhanh = @MaChiNhanh
-            GROUP BY YEAR(NgayGioXuat);
+            GROUP BY YEAR(NgayGioXuat)
+            ORDER BY YEAR(NgayGioXuat);
         END
     END
 END;

@@ -177,41 +177,63 @@ WHERE MaThe = @MaThe
 
 -- 7. Tính doanh thu theo chi nhanh --Partition theo quý / năm
 -- Tính doanh thu theo ngày
-DECLARE @NgayXuat DATE = '2020-02-01';
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7'
 
-SELECT SUM(TongTien) AS DoanhThu
-FROM HoaDon hd JOIN PhieuDatMon pd ON hd.MaPhieuDat = pd.MaPhieu
-WHERE CONVERT(DATE, NgayGioXuat) = @NgayXuat AND pd.MaChiNhanh = @MaChiNhanh;
+SELECT 
+    CONVERT(DATE, NgayGioXuat) AS Ngay,
+    SUM(TongTien) AS DoanhThu
+FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+    AND MaChiNhanh = @MaChiNhanh
+GROUP BY CONVERT(DATE, NgayGioXuat)
+ORDER BY CONVERT(DATE, NgayGioXuat);
 
 
 --Tính doanh thu theo tháng
-DECLARE @Thang INT = 1;
-DECLARE @Nam INT = 2021;
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7'
 
-SELECT SUM(TongTien) AS DoanhThu
-FROM HoaDon hd JOIN PhieuDatMon pd ON hd.MaPhieuDat = pd.MaPhieu
-WHERE MONTH(NgayGioXuat) = @Thang AND YEAR(NgayGioXuat) = @Nam AND pd.MaChiNhanh = @MaChiNhanh;
+SELECT 
+    CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
+    SUM(TongTien) AS DoanhThu
+FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+    AND MaChiNhanh = @MaChiNhanh
+GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
+ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
 
 
 --Tính doanh thu theo quý
-DECLARE @Quy INT = 4;
-DECLARE @Nam INT = 2022;
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7'
 
-SELECT SUM(TongTien) AS DoanhThu
-FROM HoaDon hd JOIN PhieuDatMon pd ON hd.MaPhieuDat = pd.MaPhieu
-WHERE YEAR(NgayGioXuat) = @Nam AND DATEPART(QUARTER, NgayGioXuat) = @Quy AND pd.MaChiNhanh = @MaChiNhanh;
+SELECT 
+    CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
+    SUM(TongTien) AS DoanhThu
+FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+    AND MaChiNhanh = @MaChiNhanh
+GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
+ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
 
 
 --Tính doanh thu theo năm
-DECLARE @Nam INT = 2021;
+DECLARE @NgayBD DATE;
+DECLARE @NgayKT DATE;
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
 
-SELECT SUM(TongTien) AS DoanhThu
-FROM HoaDon hd JOIN PhieuDatMon pd ON hd.MaPhieuDat = pd.MaPhieu
-WHERE YEAR(NgayGioXuat) = @Nam AND pd.MaChiNhanh = @MaChiNhanh;
+SELECT 
+    YEAR(NgayGioXuat) AS Nam,
+    SUM(TongTien) AS DoanhThu
+FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
+WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+    AND MaChiNhanh = @MaChiNhanh
+GROUP BY YEAR(NgayGioXuat)
+ORDER BY YEAR(NgayGioXuat);
 
 
 --9. Chuyển nhân sự giữa các chi nhánh
