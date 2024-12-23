@@ -85,15 +85,15 @@ GROUP BY nv.IDNhanVien, nv.HoTen;
 
 --3. Tìm nhân viên theo chi nhánh
 -- Tất cả
-DECLARE @MaChiNhanh VARCHAR(10) = 'YRJJQDHW';
+DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
 
 SELECT nv.IDNhanVien, nv.HoTen, nv.NgaySinh, nv.GioiTinh, nv.DiaChi, nv.NgayVaoLam, nv.NgayNghiViec, nv.MaBoPhan
 FROM NhanVien nv
 WHERE nv.MaChiNhanh = @MaChiNhanh;
 
 -- Họ tên
-DECLARE @MaChiNhanh VARCHAR(10);
-DECLARE @HoTen NVARCHAR(50);
+DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
+DECLARE @HoTen NVARCHAR(50) = 'Sylvia';
 
 SET @HoTen = '%' + @HoTen + '%';
 
