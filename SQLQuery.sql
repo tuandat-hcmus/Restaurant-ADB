@@ -1,23 +1,25 @@
 -- 1. Tính doanh thu --Partition HoaDon theo quý / năm
 -- Tính doanh thu theo ngày
-DECLARE @NgayBD DATE;
-DECLARE @NgayKT DATE;
+DECLARE @NgayBD DATE = '2020-01-01';
+DECLARE @NgayKT DATE = '2020-10-01';
 
 SELECT 
     CONVERT(DATE, NgayGioXuat) AS Ngay,
     SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
 GROUP BY CONVERT(DATE, NgayGioXuat)
 ORDER BY CONVERT(DATE, NgayGioXuat);
 
 
 --Tính doanh thu theo tháng
+DECLARE @NgayBD DATE = '2020-01-01';
+DECLARE @NgayKT DATE = '2023-01-01';
 SELECT 
     CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
     SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
 GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
 ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
 
@@ -27,7 +29,7 @@ SELECT
     CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
     SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
 GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
 ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
 
@@ -37,11 +39,11 @@ SELECT
     YEAR(NgayGioXuat) AS Nam,
     SUM(TongTien) AS DoanhThu
 FROM HoaDon
-WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
 GROUP BY YEAR(NgayGioXuat)
 ORDER BY YEAR(NgayGioXuat);
 
---2. Xem danh sách nhân viên, điểm phục vụ của mỗi nhân viên -- Index trên PhieuDanhGia(IDNhanVien), DanhGia(MaPhieu), Partition PhieuDanhGia theo quý / năm
+--2. Xem danh sách nhân viên, điểm phục vụ của mỗi nhân viên
 -- Theo ngày
 DECLARE @NgayXuat DATE = '2021-07-24';
 DECLARE @MaChiNhanh VARCHAR(10) = 'YRJJQDHW';
@@ -54,7 +56,7 @@ GROUP BY nv.IDNhanVien, nv.HoTen;
 -- Theo tháng
 DECLARE @Thang INT = 4;
 DECLARE @Nam INT = 2020;
-DECLARE @MaChiNhanh VARCHAR(10) = '00X0M9';
+DECLARE @MaChiNhanh VARCHAR(10) = '359O0QG7';
 
 SELECT nv.IDNhanVien, nv.HoTen, AVG(DiemPhucVu) AS DiemPhucVu
 FROM PhieuDatMon pd JOIN DanhGia dg ON dg.MaPhieu = pd.MaPhieu JOIN NhanVien nv ON pd.IDNhanVien = nv.IDNhanVien
@@ -81,7 +83,7 @@ WHERE YEAR(pd.NgayLap) = @Nam AND pd.MaChiNhanh = @MaChiNhanh
 GROUP BY nv.IDNhanVien, nv.HoTen;
 
 
---3. Tìm nhân viên theo chi nhánh -- Index trên NhanVien(MaChiNhanh)
+--3. Tìm nhân viên theo chi nhánh
 -- Tất cả
 DECLARE @MaChiNhanh VARCHAR(10) = 'YRJJQDHW';
 
@@ -129,7 +131,9 @@ WHERE MaPhieu = @MaPhieu
 
 --5. Tìm kiếm hóa đơn theo khách hàng
 DECLARE @MaTheKhachHang VARCHAR(10) = 'BPXF4DCG';
-DECLARE @NgayXuat DATE = '2020-01-08';
+DECLARE @NgayBD DATE = '2020-01-01';
+DECLARE @NgayKT DATE = '2020-03-01';
+
 SELECT 
     hd.TongTien,
     pd.NgayLap,
@@ -146,7 +150,7 @@ JOIN
 JOIN 
     MonAn AS m ON ctp.MaMon = m.MaMon
 WHERE 
-    hd.NgayGioXuat >= @NgayXuat AND hd.NgayGioXuat < DATEADD(DAY, 1, @NgayXuat)
+    hd.NgayGioXuat >= @NgayBD AND hd.NgayGioXuat < @NgayKT
     AND hd.MaTheKhachHang = @MaTheKhachHang;
 
 
@@ -190,7 +194,7 @@ WHERE MaThe = @MaThe
 
 
 
--- 7. Tính doanh thu theo chi nhanh --Partition theo quý / năm
+-- 7. Tính doanh thu theo chi nhanh
 -- Tính doanh thu theo ngày
 DECLARE @NgayBD DATE;
 DECLARE @NgayKT DATE;
@@ -200,7 +204,7 @@ SELECT
     CONVERT(DATE, NgayGioXuat) AS Ngay,
     SUM(TongTien) AS DoanhThu
 FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
-WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
     AND MaChiNhanh = @MaChiNhanh
 GROUP BY CONVERT(DATE, NgayGioXuat)
 ORDER BY CONVERT(DATE, NgayGioXuat);
@@ -215,7 +219,7 @@ SELECT
     CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
     SUM(TongTien) AS DoanhThu
 FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
-WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
     AND MaChiNhanh = @MaChiNhanh
 GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
 ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
@@ -230,29 +234,29 @@ SELECT
     CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
     SUM(TongTien) AS DoanhThu
 FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
-WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
     AND MaChiNhanh = @MaChiNhanh
 GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
 ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
 
 
 --Tính doanh thu theo năm
-DECLARE @NgayBD DATE;
-DECLARE @NgayKT DATE;
+DECLARE @NgayBD DATE = '2020-01-01';
+DECLARE @NgayKT DATE = '2022-01-05';
 DECLARE @MaChiNhanh VARCHAR(10) = '152OC76L7';
 
 SELECT 
     YEAR(NgayGioXuat) AS Nam,
     SUM(TongTien) AS DoanhThu
 FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
-WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
     AND MaChiNhanh = @MaChiNhanh
 GROUP BY YEAR(NgayGioXuat)
 ORDER BY YEAR(NgayGioXuat);
 
 --8. Thống kê doanh thu theo từng món
-DECLARE @NgayBD DATE;
-DECLARE @NgayKT DATE;
+DECLARE @NgayBD DATE = '2021-02-03';
+DECLARE @NgayKT DATE = '2022-02-03';
 
 WITH BestSellingCTE AS (
     SELECT 

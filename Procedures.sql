@@ -138,9 +138,9 @@ BEGIN
                 CONVERT(DATE, NgayGioXuat) AS Ngay,
                 SUM(TongTien) AS DoanhThu
             FROM HoaDon
-            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
-            GROUP BY CONVERT(DATE, NgayGioXuat)
-            ORDER BY CONVERT(DATE, NgayGioXuat);
+            WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
+            GROUP BY CAST(NgayGioXuat AS DATE)
+            ORDER BY CAST(NgayGioXuat AS DATE);
         END
         ELSE
         BEGIN
@@ -148,10 +148,10 @@ BEGIN
                 CONVERT(DATE, NgayGioXuat) AS Ngay,
                 SUM(TongTien) AS DoanhThu
             FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
-            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+            WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
               AND MaChiNhanh = @MaChiNhanh
-            GROUP BY CONVERT(DATE, NgayGioXuat)
-            ORDER BY CONVERT(DATE, NgayGioXuat);
+            GROUP BY CAST(NgayGioXuat AS DATE)
+            ORDER BY CAST(NgayGioXuat AS DATE);
         END
     END
     ELSE IF @LoaiTinh = 2
@@ -162,7 +162,7 @@ BEGIN
                 CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
                 SUM(TongTien) AS DoanhThu
             FROM HoaDon
-            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+            WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
             GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
             ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
         END
@@ -172,7 +172,7 @@ BEGIN
                 CONCAT(YEAR(NgayGioXuat), '-', MONTH(NgayGioXuat)) AS Thang,
                 SUM(TongTien) AS DoanhThu
             FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
-            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+            WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
               AND MaChiNhanh = @MaChiNhanh
             GROUP BY YEAR(NgayGioXuat), MONTH(NgayGioXuat)
             ORDER BY YEAR(NgayGioXuat), MONTH(NgayGioXuat);
@@ -189,7 +189,7 @@ BEGIN
                 CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
                 SUM(TongTien) AS DoanhThu
             FROM HoaDon
-            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+            WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
             GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
             ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
         END
@@ -199,7 +199,7 @@ BEGIN
                 CONCAT(YEAR(NgayGioXuat), '-Q', ((MONTH(NgayGioXuat) - 1) / 3 + 1)) AS Quy,
                 SUM(TongTien) AS DoanhThu
             FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
-            WHERE CONVERT(DATE, NgayGioXuat) BETWEEN @NgayBD AND @NgayKT
+            WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
               AND MaChiNhanh = @MaChiNhanh
             GROUP BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1)
             ORDER BY YEAR(NgayGioXuat), ((MONTH(NgayGioXuat) - 1) / 3 + 1);
@@ -213,7 +213,7 @@ BEGIN
                 YEAR(NgayGioXuat) AS Nam,
                 SUM(TongTien) AS DoanhThu
             FROM HoaDon
-            WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+            WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
             GROUP BY YEAR(NgayGioXuat)
             ORDER BY YEAR(NgayGioXuat);
         END
@@ -223,7 +223,7 @@ BEGIN
                 YEAR(NgayGioXuat) AS Nam,
                 SUM(TongTien) AS DoanhThu
             FROM HoaDon JOIN PhieuDatMon ON PhieuDatMon.MaPhieu = HoaDon.MaPhieuDat
-            WHERE YEAR(NgayGioXuat) BETWEEN YEAR(@NgayBD) AND YEAR(@NgayKT)
+            WHERE NgayGioXuat BETWEEN @NgayBD AND @NgayKT
               AND MaChiNhanh = @MaChiNhanh
             GROUP BY YEAR(NgayGioXuat)
             ORDER BY YEAR(NgayGioXuat);
@@ -231,12 +231,12 @@ BEGIN
     END
 END;
 GO
---EXEC TongDoanhThu
---    @NgayBD = '2020-01-01', 
---    @NgayKT = '2020-05-31', 
---    @LoaiTinh = 2,           -- Tính theo ngày
---    @MaChiNhanh = 'YRJJQDHW';
-
+EXEC TongDoanhThu
+    @NgayBD = '2020-01-01', 
+    @NgayKT = '2020-05-31', 
+    @LoaiTinh = 2,           -- Tính theo ngày
+    @MaChiNhanh = '667U9QB';
+GO
 
 -- Hóa đơn theo khách hàng theo ngày
 -- DROP PROCEDURE getHoaDonKhachHang;
