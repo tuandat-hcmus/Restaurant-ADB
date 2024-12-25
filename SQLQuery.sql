@@ -109,13 +109,20 @@ DECLARE @NgayLap DATE = GETDATE();
 DECLARE @SoBan INT;
 DECLARE @IDNhanVien VARCHAR(10);
 DECLARE @MaChiNhanh VARCHAR(10);
+DECLARE @MaMon VARCHAR(10);
+DECLARE @SoLuong INT;
+DECLARE @DonGia DECIMAL(10, 2);
 
 INSERT INTO PhieuDatMon VALUES (@MaPhieu, @NgayLap, @SoBan, @IDNhanVien, @MaChiNhanh)
+INSERT INTO ChiTietPhieuDat VALUES (@MaMon, @MaPhieu, @SoLuong, @DonGia)
 
 -- Xóa
 DECLARE @MaPhieu VARCHAR(10);
 
 DELETE FROM PhieuDatMon
+WHERE MaPhieu = @MaPhieu
+
+DELETE FROM ChiTietPhieuDat
 WHERE MaPhieu = @MaPhieu
 
 -- Cập nhật

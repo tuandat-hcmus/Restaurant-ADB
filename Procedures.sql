@@ -101,10 +101,11 @@ GO
 CREATE PROCEDURE InsertPhieuDatMon
     @SoBan INT,
     @IDNhanVien VARCHAR(10),
-    @MaChiNhanh VARCHAR(10)
+    @MaChiNhanh VARCHAR(10),
+    @MaPhieu VARCHAR(10) OUTPUT
 AS
 BEGIN
-    DECLARE @MaPhieu VARCHAR(10) = LEFT(NEWID(), 10);
+    SET @MaPhieu = LEFT(NEWID(), 10);
     DECLARE @NgayLap DATE = GETDATE();
     IF EXISTS (SELECT 1 FROM PhieuDatMon WHERE MaPhieu = @MaPhieu)
     BEGIN
@@ -115,9 +116,36 @@ BEGIN
     VALUES (@MaPhieu, @NgayLap, @SoBan, @IDNhanVien, @MaChiNhanh);
 END;
 GO
+--select * from PhieuDatMon where MaChiNhanh = '152OC76L7' and IDNhanVien = '41693' order by NgayLap desc
+--DECLARE @MaPhieu VARCHAR(10);
+--EXEC InsertPhieuDatMon @SoBan = 1, @IDNhanVien = '41693', @MaChiNhanh = '152OC76L7', @MaPhieu = @MaPhieu OUTPUT;
+--SELECT @MaPhieu AS MaPhieu;
 
---exec InsertPhieuDatMon 5, '0012KH', 'YRJJQDHW'
 
+-- Tạo chi tiết phiếu đặt
+-- DROP PROCEDURE InsertChiTietPhieuDatMon
+CREATE PROCEDURE InsertChiTietPhieuDatMon
+    @MaMon VARCHAR(10),
+    @MaPhieu VARCHAR(10),
+    @SoLuong INT
+AS
+BEGIN
+
+    DECLARE @DonGia DECIMAL(10, 2);
+
+    SELECT @DonGia = GiaHienTai
+    FROM MonAn
+    WHERE MaMon = @MaMon;
+
+    IF @DonGia IS NULL
+    BEGIN
+        RAISERROR('Mã món không hợp lệ hoặc không tìm thấy đơn giá.', 16, 1);
+        RETURN;
+    END
+
+    INSERT INTO ChiTietPhieuDat VALUES (@MaMon, @MaPhieu, @SoLuong, @DonGia)
+END;
+GO
 
 
 -- Tính tổng doanh thu
