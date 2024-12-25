@@ -136,6 +136,10 @@ UPDATE PhieuDatMon
 SET NgayLap = @NgayLap, SoBan = @SoBan, IDNhanVien = @IDNhanVien, MaChiNhanh = @MaChiNhanh
 WHERE MaPhieu = @MaPhieu
 
+UPDATE ChiTietPhieuDat
+SET MaMon = @MaMonMoi, SoLuong = @SoLuong
+WHERE MaPhieu = @MaPhieu AND MaMon = @MaMon
+
 --5. Tìm kiếm hóa đơn theo khách hàng
 DECLARE @MaTheKhachHang VARCHAR(10) = 'BPXF4DCG';
 DECLARE @NgayBD DATE = '2020-01-01';
