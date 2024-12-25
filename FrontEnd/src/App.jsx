@@ -1,7 +1,9 @@
+import MainLayout from "./layouts/MainLayout"
+
 function App() {
   return (
     <>
-    <button>Click me</button>
+    <MainLayout></MainLayout>
     </>
   )
 }
