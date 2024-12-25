@@ -147,7 +147,6 @@ BEGIN
 END;
 GO
 
-
 -- Tính tổng doanh thu
 -- DROP PROCEDURE TongDoanhThu
 CREATE PROCEDURE TongDoanhThu
