@@ -27,6 +27,6 @@ public class MonAn {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "IDMuc", nullable = false)
-    private com.example.BackEnd.model.Muc iDMuc;
+    private Muc muc;
 
 }
