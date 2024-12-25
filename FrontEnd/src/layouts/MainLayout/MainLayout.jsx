@@ -1,7 +1,9 @@
-import React from 'react'
+import TopBar from "src/components/TopBar";
 
 export default function MainLayout() {
   return (
-    <div>MainLayout</div>
+    <main>
+      <TopBar />      
+    </main>
   )
 }
