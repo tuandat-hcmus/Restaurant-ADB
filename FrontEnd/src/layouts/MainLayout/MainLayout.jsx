@@ -1,8 +1,8 @@
 // import { useState } from 'react'
 // import TopBar from 'src/components/TopBar'
-import Login from 'src/pages/Login'
+// import Login from 'src/pages/Login'
 
-export default function MainLayout() {
+export default function MainLayout({children}) {
   // const [auth, setAuth] = useState(false)
   // const setLogin = () => {
   //   setAuth((prevAuth) => 
@@ -13,7 +13,7 @@ export default function MainLayout() {
     <main>
       {/* <TopBar auth={auth} />
       <button onClick={setLogin}>Login</button> */}
-      <Login />
+      {children}
     </main>
   )
 }
