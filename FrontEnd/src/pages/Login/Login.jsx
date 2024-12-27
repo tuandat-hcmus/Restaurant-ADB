@@ -2,7 +2,8 @@ import { Box, Button, Card, Checkbox, Divider, FormControlLabel, TextField, Typo
 import { AppContext } from 'src/contexts/AppContext'
 import SetMealIcon from '@mui/icons-material/SetMeal'
 import { useContext, useState } from 'react'
-import { http } from 'src/utils/http'
+import authApi from '../../apis/AuthApi'
+
 
 export default function Login() {
   const { setIsAuthenticated } = useContext(AppContext)
@@ -10,18 +11,10 @@ export default function Login() {
   const [password, setPassword] = useState(null)
   const handleSubmit = (event) => {
     event.preventDefault()
-    http
-      .post('/login', {
-        username,
-        password
-      })
-      .then((data) => {
-        console.log(data)
-        setIsAuthenticated(true)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    authApi.login({username, password}).then((data) => {
+      console.log(data)
+      setIsAuthenticated(true)
+    })
   }
   return (
     <Card sx={{ mx: 'auto', my: 6, p: 6, width: '25rem', display: 'flex', flexDirection: 'column', gap: 4 }}>
