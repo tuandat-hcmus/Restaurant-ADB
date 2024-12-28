@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Home from './pages/Home'
 import CusLogin from './pages/CusLogin'
 import Dashboard from './pages/Dashboard/Dashboard'
+import MainLayout from './layouts/MainLayout/MainLayout'
 
 function RejectedRoute() {
   const {isAuth} = useContext(AppContext)
@@ -14,7 +15,7 @@ function RejectedRoute() {
 function Root() {
   const {isAuth, role} = useContext(AppContext)
   if(!isAuth) 
-    return <Home />
+    return <MainLayout />
   return role === 'employee'? <Dashboard /> : <Home />
 }
 
