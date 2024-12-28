@@ -14,10 +14,11 @@ import { AppContext } from 'src/contexts/AppContext'
 import SetMealIcon from '@mui/icons-material/SetMeal'
 import { useContext, useState } from 'react'
 import authApi from '../../apis/AuthApi'
-import { setTokenToLS } from '../../utils/auth'
+import { setRoleToLS, setTokenToLS } from '../../utils/auth'
+import { jwtDecode } from 'jwt-decode'
 
 export default function CusLogin() {
-  const { setIsCusAuth, isCusAuth } = useContext(AppContext)
+  const { setIsAuth, isAuth, setRole } = useContext(AppContext)
   const [username, setUsername] = useState(null)
   const [password, setPassword] = useState(null)
   const [open, setOpen] = useState(false)
@@ -27,8 +28,11 @@ export default function CusLogin() {
       .cusLogin({ username, password })
       .then((data) => {
         console.log(data)
+        const {roles} = jwtDecode(data.token)
         setTokenToLS(data.token)
-        setIsCusAuth(true)
+        setRoleToLS(roles)
+        setRole(roles)
+        setIsAuth(true)
       })
       .catch((error) => {
         console.log(error)
@@ -77,8 +81,8 @@ export default function CusLogin() {
         onClose={() => setOpen(false)}
         anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
       >
-        <Alert severity={isCusAuth ? 'success' : 'error'}>
-          {isCusAuth ? 'Login successfully' : 'Invalid username or password'}
+        <Alert severity={isAuth ? 'success' : 'error'}>
+          {isAuth ? 'Login successfully' : 'Invalid username or password'}
         </Alert>
       </Snackbar>
     </Card>

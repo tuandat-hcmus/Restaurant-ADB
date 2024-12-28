@@ -4,39 +4,36 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import Login from './pages/Login'
 import Home from './pages/Home'
 import CusLogin from './pages/CusLogin'
+import Dashboard from './pages/Dashboard/Dashboard'
 
-function RejectedEmpRoute() {
-  const { isAuth } = useContext(AppContext)
-  return !isAuth ? <Outlet /> : <Navigate to='/' replace />
+function RejectedRoute() {
+  const {isAuth} = useContext(AppContext)
+  return !isAuth? <Outlet /> : <Navigate to='/' />
 }
 
-function RejectedCusRoute() {
-  const { isCusAuth } = useContext(AppContext)
-  return !isCusAuth ? <Outlet /> : <Navigate to='/' />
+function Root() {
+  const {isAuth, role} = useContext(AppContext)
+  if(!isAuth) 
+    return <Home />
+  return role === 'employee'? <Dashboard /> : <Home />
 }
 
 export default function useRouteElements() {
   const elements = useRoutes([
     {
-      path: '/',
-      element: <Home />
+      path: '', 
+      element: <Root />
     },
     {
       path: '',
-      element: <RejectedEmpRoute />,
+      element: <RejectedRoute />,
       children: [
         {
           path: '/login',
           element: <Login />
-        }
-      ]
-    },
-    {
-      path: '',
-      element: <RejectedCusRoute />,
-      children: [
+        }, 
         {
-          path: '/cusLogin',
+          path: '/cusLogin', 
           element: <CusLogin />
         }
       ]

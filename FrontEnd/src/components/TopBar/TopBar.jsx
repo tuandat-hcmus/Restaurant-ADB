@@ -6,7 +6,7 @@ import { useContext } from 'react'
 import { AppContext } from 'src/contexts/AppContext'
 
 export default function TopBar() {
-  const {isCusAuth} = useContext(AppContext)
+  const {isAuth} = useContext(AppContext)
   return (
     <AppBar position='relative' sx={{ flexGrow: 1 }}>
       <Toolbar>
@@ -16,7 +16,7 @@ export default function TopBar() {
         <Typography variant='h6' component='div' sx={{ flexGrow: 1, letterSpacing: 2 }}>
           <Box sx={{ fontWeight: 700 }}>ShuShiX</Box>
         </Typography>
-        {!isCusAuth ? 
+        {!isAuth ? 
         <Box gap={2} display='flex'>
           <Button component={Link} to='/login' color='inherit' size='small'>Log in as employee</Button>
           <Button component={Link} to='/cusLogin' color='inherit' variant='outlined' size='small'>Login as customer</Button> 

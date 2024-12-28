@@ -1,20 +1,19 @@
-export const setCusTokenToLS = (token) => {
-  localStorage.setItem('cus_token', token)
+export const getTokenFromLS = () => {
+  return localStorage.getItem('token')
 }
 
-export const setEmpTokenToLS = (token) => {
-  localStorage.setItem('emp_token', token)
+export const setTokenToLS = (token) => {
+  localStorage.setItem('token', token)
 }
 
-export const getCusTokenFromLS = () => {
-  return localStorage.getItem('cus_token')
+export const getRoleFromLS = () => {
+  return localStorage.getItem('role')
 }
 
-export const getEmpTokenFromLS = () => {
-  return localStorage.getItem('emp_token')
+export const setRoleToLS = (role) => {
+  localStorage.setItem('role', role)
 }
 
 export const clearLS = () => {
-  localStorage.removeItem('emp_token')
-  localStorage.removeItem('cus_token')
+  localStorage.removeItem('token')
 }

@@ -14,10 +14,11 @@ import { AppContext } from 'src/contexts/AppContext'
 import SetMealIcon from '@mui/icons-material/SetMeal'
 import { useContext, useState } from 'react'
 import authApi from '../../apis/AuthApi'
-import { setTokenToLS } from '../../utils/auth'
+import { setTokenToLS, setRoleToLS } from '../../utils/auth'
+import { jwtDecode } from 'jwt-decode'
 
 export default function Login() {
-  const { setIsAuth, isAuth } = useContext(AppContext)
+  const { setIsAuth, isAuth, setRole } = useContext(AppContext)
   const [username, setUsername] = useState(null)
   const [password, setPassword] = useState(null)
   const [open, setOpen] = useState(false)
@@ -27,7 +28,10 @@ export default function Login() {
       .login({ username, password })
       .then((data) => {
         console.log(data)
+        const { roles } = jwtDecode(data.token)
         setTokenToLS(data.token)
+        setRoleToLS(roles)
+        setRole(roles)
         setIsAuth(true)
       })
       .catch((error) => {
