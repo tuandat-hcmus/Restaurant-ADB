@@ -1,21 +1,26 @@
 import { createContext, useEffect, useState } from 'react'
 
 const initialAppContext = {
-  isAuthenticated: false, 
-  setIsAuthenticated: () => {}
+  isAuth: false, 
+  isCusAuth: false, 
+  setIsAuth: () => {},
+  setIsCusAuth: () => {}
 }
 
 export const AppContext = createContext(initialAppContext)
 
 export const AppProvider = ({children, defaultValue = initialAppContext}) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(defaultValue.isAuthenticated)
+  const [isAuth, setIsAuth] = useState(defaultValue.isAuth)
+  const [isCusAuth, setIsCusAuth] = useState(defaultValue.isCusAuth)
   useEffect(() => {
-    console.log(isAuthenticated)
-  }, [isAuthenticated])
+    console.log(isAuth)
+  }, [isAuth])
   return (
     <AppContext.Provider value={{
-      isAuthenticated,
-      setIsAuthenticated
+        isAuth, 
+        isCusAuth, 
+        setIsAuth, 
+        setIsCusAuth
     }}>
       {children}
     </AppContext.Provider>

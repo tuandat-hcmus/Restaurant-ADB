@@ -33,4 +33,4 @@ export class Http {
   }
 }
 
-export const http = new Http()
+export const http = new Http().instance
