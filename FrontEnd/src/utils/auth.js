@@ -16,4 +16,5 @@ export const setRoleToLS = (role) => {
 
 export const clearLS = () => {
   localStorage.removeItem('token')
+  localStorage.removeItem('role')
 }
