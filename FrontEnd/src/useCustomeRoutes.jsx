@@ -2,12 +2,17 @@ import { useContext } from 'react'
 import { AppContext } from './contexts/AppContext'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import Login from './pages/Login'
-import CusLogin from './pages/CusLogin'
 import Home from './pages/Home'
+import CusLogin from './pages/CusLogin'
 
-function RejectedRoute() {
-  const { isAuthen } = useContext(AppContext)
-  return !isAuthen ? <Outlet /> : <Navigate to='/' />
+function RejectedEmpRoute() {
+  const { isAuth } = useContext(AppContext)
+  return !isAuth ? <Outlet /> : <Navigate to='/' replace />
+}
+
+function RejectedCusRoute() {
+  const { isCusAuth } = useContext(AppContext)
+  return !isCusAuth ? <Outlet /> : <Navigate to='/' />
 }
 
 export default function useRouteElements() {
@@ -17,13 +22,19 @@ export default function useRouteElements() {
       element: <Home />
     },
     {
-      path: '/',
-      element: <RejectedRoute />,
+      path: '',
+      element: <RejectedEmpRoute />,
       children: [
         {
           path: '/login',
           element: <Login />
-        },
+        }
+      ]
+    },
+    {
+      path: '',
+      element: <RejectedCusRoute />,
+      children: [
         {
           path: '/cusLogin',
           element: <CusLogin />
