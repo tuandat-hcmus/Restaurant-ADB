@@ -9,16 +9,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 public interface PhieuDatRepo extends JpaRepository<PhieuDatMon, String> {
 
     @Modifying
     @Transactional
-    @Query(value = "EXEC InsertPhieuDatMon :soBan, :iDNhanVien, :maChiNhanh", nativeQuery = true)
-    int insertPhieuDatMon(
-        @Param("soBan") String soBan,
+    @Query(value = "DECLARE @MaPhieu VARCHAR(10); EXEC InsertPhieuDatMon :soBan, :iDNhanVien, :maChiNhanh, @MaPhieu OUTPUT; SELECT @MaPhieu AS MaPhieu;", nativeQuery = true)
+    List<Map<String, Object>> insertPhieuDatMon(
+        @Param("soBan") int soBan,
         @Param("iDNhanVien") String iDNhanVien,
         @Param("maChiNhanh") String maChiNhanh
     );
+    
+    @Modifying
+    @Transactional
+    @Query(value = "EXEC InsertChiTietPhieuDatMon :maMon, :maPhieu, :soLuong", nativeQuery = true)
+    void insertChiTietPhieuDat(String maMon, String maPhieu, int soLuong);
     
 }
