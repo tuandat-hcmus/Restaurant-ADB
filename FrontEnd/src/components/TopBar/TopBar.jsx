@@ -31,7 +31,7 @@ export default function TopBar() {
     closeMenu()
   }
   return (
-    <AppBar position='relative' sx={{ flexGrow: 1 }}>
+    <AppBar position='fixed' sx={{ flexGrow: 1, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
         <IconButton sx={{ mr: 1 }} color='inherit' size='large' component={Link} to='/'>
           <SetMealIcon sx={{ scale: 1.5 }} />
