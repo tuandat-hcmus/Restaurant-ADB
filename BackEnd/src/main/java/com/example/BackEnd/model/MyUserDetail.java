@@ -29,4 +29,8 @@ public class MyUserDetail implements UserDetails {
     public String getUsername() {
         return account.getUsername();
     }
+    
+    public String getId() {
+        return account.getId();
+    }
 }
