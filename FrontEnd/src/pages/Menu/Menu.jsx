@@ -25,12 +25,12 @@ import orderApi from '../../apis/OrderApi'
 
 export default function Menu() {
   const { role } = useContext(AppContext)
-  const [branchId, setBranchId] = useState('152OC76L7')
+  const [branchId, setBranchId] = useState('44OJKN')
   const [menuList, setMenuList] = useState([])
   const [orderList, setOrderList] = useState([])
   const [tableNumber, setTableNumber] = useState(1)
   const [noti, setNoti] = useState({
-    open: false, 
+    open: false,
     message: false,
     success: false
   })
@@ -65,7 +65,7 @@ export default function Menu() {
       .then((data) => {
         console.log(data)
         setNoti({
-          open: true, 
+          open: true,
           message: 'Create order successfully',
           success: true
         })
@@ -73,22 +73,34 @@ export default function Menu() {
       .catch((error) => {
         console.log(error)
         setNoti({
-          open: true, 
-          message: 'Failed to create order', 
+          open: true,
+          message: 'Failed to create order',
           success: false
         })
       })
   }
   useEffect(() => {
-    menuApi.getMenu(branchId).then((data) => {
-      console.log(data)
-      setMenuList(data)
-    })
-  }, [])
-  useEffect(() => {
-    userApi.getEmpInfo(userApi.getUserId()).then((info) => {
-      setBranchId(info.maChiNhanh)
-    }).catch(error => console.log(error))
+    const userId = userApi.getUserId()
+    if (userId) {
+      userApi
+        .getEmpInfo(userId)
+        .then((info) => {
+          setBranchId(info.maChiNhanh)
+          return info.maChiNhanh
+        })
+        .then((branchId) => {
+          menuApi.getMenu(branchId).then((data) => {
+            console.log(data)
+            setMenuList(data)
+          })
+        })
+        .catch((error) => console.log(error))
+    } else {
+      menuApi.getMenu(branchId).then((data) => {
+        console.log(data)
+        setMenuList(data)
+      })
+    }
   }, [])
   useEffect(() => {
     console.log(orderList)
@@ -98,22 +110,26 @@ export default function Menu() {
       <Typography variant='h4' gutterBottom>
         Home Page | ShuShiX
       </Typography>
-      <Box display={'flex'} alignItems={'center'} justifyContent={'right'} gap={2}>
-        <Typography variant='body1'>Select branch Id: </Typography>
-        <Box display={'flex'} alignContent={'center'}>
-          <TextField
-            size='small'
-            label='Branch id'
-            variant='outlined'
-            color='inherit'
-            defaultValue={branchId}
-            onChange={handleChange}
-          />
-          <Button variant='outlined' onClick={handleClick}>
-            <SearchIcon />
-          </Button>
+      {role !== 'employee' ? (
+        <Box display={'flex'} alignItems={'center'} justifyContent={'right'} gap={2}>
+          <Typography variant='body1'>Select branch Id: </Typography>
+          <Box display={'flex'} alignContent={'center'}>
+            <TextField
+              size='small'
+              label='Branch id'
+              variant='outlined'
+              color='inherit'
+              defaultValue={branchId}
+              onChange={handleChange}
+            />
+            <Button variant='outlined' onClick={handleClick}>
+              <SearchIcon />
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      ) : (
+        <Typography variant='body1'>Branch id: {branchId}</Typography>
+      )}
       <Box display={'flex'} gap={2} mt={4} alignItems={'flex-start'}>
         <Container>
           <Grid2 container spacing={4} justifyContent={'center'}>
@@ -180,12 +196,10 @@ export default function Menu() {
       <Snackbar
         open={noti.open}
         autoHideDuration={3000}
-        onClose={() => setNoti({open: false, message: false, success: false})}
+        onClose={() => setNoti({ open: false, message: false, success: false })}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Alert severity={noti.success ? 'success' : 'error'}>
-          {noti.message}
-        </Alert>
+        <Alert severity={noti.success ? 'success' : 'error'}>{noti.message}</Alert>
       </Snackbar>
     </div>
   )
