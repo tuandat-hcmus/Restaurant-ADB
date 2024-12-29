@@ -45,7 +45,7 @@ public class SecurityConfig {
                     return corsConfig;
                 }))
             .authorizeHttpRequests(request -> request
-                .requestMatchers("register", "login", "test", "cusLogin", "cusRegister")
+                .requestMatchers("register", "login", "test", "cusLogin", "cusRegister", "thucdon/{maChiNhanh}")
                 .permitAll()
                 .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
