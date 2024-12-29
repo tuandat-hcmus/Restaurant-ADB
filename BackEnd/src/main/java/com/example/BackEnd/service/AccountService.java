@@ -2,6 +2,7 @@ package com.example.BackEnd.service;
 
 import com.example.BackEnd.model.Account;
 import com.example.BackEnd.model.KhachHang;
+import com.example.BackEnd.model.MyUserDetail;
 import com.example.BackEnd.model.NhanVien;
 import com.example.BackEnd.repository.ChiNhanhRepo;
 import com.example.BackEnd.repository.KhachHangRepo;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -97,7 +99,9 @@ public class AccountService {
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                
+                MyUserDetail userDetail = (MyUserDetail) authentication.getPrincipal();
+                String id = userDetail.getId();
+                user.setId(id);
                 String token = jwtService.generateToken(user);
                 response.put("token", token);
                 response.put("message", "Login successful");
