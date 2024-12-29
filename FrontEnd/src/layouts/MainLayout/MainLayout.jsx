@@ -6,7 +6,7 @@ export default function MainLayout() {
   return (
     <main>
       <TopBar />
-      <Box mx={14} my={4}>
+      <Box mx={14} my={12}>
         <Outlet />
       </Box>
     </main>
