@@ -85,7 +85,7 @@ export default function Menu() {
             ))}
           </Grid2>
         </Container>
-        {role === 'employee' && <Card sx={{ p: 2 }}>
+        {role === 'employee' && <Card sx={{ p: 2, minWidth: '15rem' }}>
           <Typography variant='h4'>Order</Typography>
           <Divider />
           <Box component='form' display={'flex'} flexDirection={'column'} gap={2} my={2}>

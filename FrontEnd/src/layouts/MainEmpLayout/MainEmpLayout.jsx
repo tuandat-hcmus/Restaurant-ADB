@@ -9,7 +9,7 @@ export default function MainEmpLayout() {
       <Box display={'flex'} my={8}>
         <TopBar />
         <SideBar />
-        <Box mx={14} my={4} flexGrow={1}>
+        <Box ml={24} mr={4} my={4} flexGrow={1} >
           <Outlet />
         </Box>
       </Box>
