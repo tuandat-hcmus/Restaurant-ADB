@@ -89,4 +89,13 @@ public class NhanVienService {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    public ResponseEntity<NhanVien> getNhanVienById(String id) {
+        try {
+            NhanVien nv = nhanVienRepo.findNhanVienByID(id);
+            return new ResponseEntity<>(nv, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
