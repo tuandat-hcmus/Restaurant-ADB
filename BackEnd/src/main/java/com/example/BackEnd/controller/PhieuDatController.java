@@ -1,5 +1,6 @@
 package com.example.BackEnd.controller;
 
+import com.example.BackEnd.DTO.ChiTietPhieuDatDTO;
 import com.example.BackEnd.model.PhieuDatMon;
 import com.example.BackEnd.service.PhieuDatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class PhieuDatController {
     }
     
     @PostMapping("/them")
-    public ResponseEntity<?> insertPhieuDat(@RequestPart("soBan") String soBan, @RequestPart("idNhanVien") String idNhanVien,  @RequestPart("maChiNhanh") String maChiNhanh) {
-        return phieuDatService.insertPhieuDatMon(soBan, idNhanVien, maChiNhanh);
+    public ResponseEntity<?> insertPhieuDat(@RequestBody ChiTietPhieuDatDTO chiTietPhieuDatDTO) {
+        return phieuDatService.insertPhieuDatMon(chiTietPhieuDatDTO);
     }
     
     @DeleteMapping("/xoa/{id}")

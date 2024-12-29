@@ -71,4 +71,7 @@ public interface NhanVienRepo extends JpaRepository<NhanVien, String> {
         "FROM NhanVien nv " +
         "WHERE nv.maChiNhanh = :maChiNhanh AND nv.hoTen LIKE :hoTen ")
     List<NhanVienDTO> findNhanVienByHoTen(String hoTen, String maChiNhanh);
+    
+    @Query("SELECT nv FROM NhanVien nv WHERE nv.iDNhanVien = :idNhanVien ")
+    NhanVien findNhanVienByID(String idNhanVien);
 }

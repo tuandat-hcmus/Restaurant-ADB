@@ -1,5 +1,7 @@
 package com.example.BackEnd.service;
 
+import com.example.BackEnd.DTO.ChiTietPhieuDatDTO;
+import com.example.BackEnd.DTO.MonAnDTO;
 import com.example.BackEnd.model.PhieuDatMon;
 import com.example.BackEnd.repository.PhieuDatRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PhieuDatService {
@@ -15,11 +18,15 @@ public class PhieuDatService {
     @Autowired
     private PhieuDatRepo phieuDatRepo;
     
-    public ResponseEntity<?> insertPhieuDatMon(String soBan, String idNhanVien, String maChiNhanh) {
+    public ResponseEntity<?> insertPhieuDatMon(ChiTietPhieuDatDTO chiTietPhieuDatDTO) {
         try {
-            int res = phieuDatRepo.insertPhieuDatMon(soBan, idNhanVien, maChiNhanh);
-            if (res == 1) {
-                return new ResponseEntity<>("Success", HttpStatus.CREATED);
+            List<Map<String, Object>> res = phieuDatRepo.insertPhieuDatMon(chiTietPhieuDatDTO.getSoBan(), chiTietPhieuDatDTO.getIdNhanVien(), chiTietPhieuDatDTO.getMaChiNhanh());
+            if (res != null && !res.isEmpty()) {
+                String maPhieu = res.get(0).get("MaPhieu").toString();
+                for (MonAnDTO m : chiTietPhieuDatDTO.getMon()) {
+                    phieuDatRepo.insertChiTietPhieuDat(m.getMaMon(), maPhieu, m.getSoLuong());
+                }
+                return new ResponseEntity<>(maPhieu, HttpStatus.CREATED);
             }
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

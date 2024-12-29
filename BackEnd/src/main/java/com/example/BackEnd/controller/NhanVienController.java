@@ -73,5 +73,8 @@ public class NhanVienController {
         return nhanVienService.getDiemNhanVienNam(nam, maChiNhanh);
     }
     
-    
+    @GetMapping("/{empId}")
+    public ResponseEntity<NhanVien> getNhanVienById(@PathVariable String empId) {
+        return nhanVienService.getNhanVienById(empId);
+    }
 }
